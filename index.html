@@ -2,752 +2,503 @@
 <html lang="en">
 <head>
 <title>L-System Fractal Generator</title>
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<link rel="icon" sizes="any" href="data:image/svg+xml;charset=UTF-8,%3Csvg%20id%3D%22designSvg%22%20width%3D%2220%22%20height%3D%2220%22%20version%3D%221.1%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%3Cpath%20d%3D%22m3.26%2015%200.962%201.67%200.962-1.67h1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67z%22%20fill%3D%22%23918a6f%22%2F%3E%0A%3C%2Fsvg%3E">
+
 <style>
 body{font-family:sans-serif; font-size: 13px; padding:0px; margin:0px; background-color:#7f9fbd;}
-button{font-family:sans-serif; font-size: 13px;}
-#main{
-margin-top: 36px;
-}
-#topPanel {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background-color: #4b5c6e;
-    z-index: 10;
-    color: #f1f1f1;
-    padding-top: 5px;
-}
-#topPanel div {
-    float: left;
-}
+button{ background-color: #2a577c; border:none; color:white; text-decoration:none; display:inline-block; cursor:pointer; border-radius: 4px; height: 25px; overflow: hidden; margin-bottom: 5px; vertical-align: middle; float: left; margin-right: 4px;}
+label{ display: inline-block; float: left; padding: 4px 4px 0px 0px;}
+select{ padding: 3px; display: inline-block; float: left; border-radius: 4px;}
+input[type="range"] {accent-color:#42769f; float:left;}
+.main{margin-top: 36px;}
+.top-panel { position: fixed; left: 0; top: 0; width: 100%; background-color: #4b5c6e; z-index: 10; color: #f1f1f1; padding-top: 5px;}
+.top-panel div { float: left;}
 .number-text{background-color: #f1f1f1; padding:5px 7px 5px 7px; color: #000;}
-button{
-    background-color: #2a577c;
-    border:none;
-    color:white;
-    text-decoration:none;
-    display:inline-block;
-    cursor:pointer;
-    border-radius: 3px;
-    height: 25px;
-    overflow: hidden;
-    margin-bottom: 5px;
-    vertical-align: middle;
-    float: left;
-    margin-right: 4px;
-    font-family: Sans-Serif;
-}
 .minus-btn{border-radius:3px 0px 0px 3px; margin: 0px}
 .plus-btn{border-radius:0px 3px 3px 0px;}
-label{
-    display: inline-block;
-    float: left;
-    padding-top: 4px;
+/* --- Modal --- */
+.modal-backdrop {position: fixed;  top: 0;  left: 0;  width: 100vw;  height: 100vh;  background: #00000060;  display: none;  align-items: center;  justify-content: center;  z-index: 1000;}
+.modal {  background: #f1f1f1;  padding: 1.5rem;  border-radius: 10px;  max-width: 510px;  width: 90%;  box-shadow: 0 10px 30px #00000030;  position: relative;  color: #111111;}
+.modal h2 {  margin-top: 0;}
+.modal .close {  position: absolute;  top: 10px;  right: 14px;  font-size: 1.5rem;  color: #898989;  cursor: pointer;}
+.modal .close:hover {  color: #000000;}
+.modal-heading { font-size: 1.2rem;}
+.modal-content div{ margin: 0.6rem 0rem;}
+.modal-content .modal-block{display: inline-block; margin: 1rem;}
+.hidden{display: none}
+@media print { 
+  .top-panel{ display: none !important; }
 }
-select{
-    padding-top: 4px;
-    display: inline-block;
-    float: left;
-}
-
-@media print {
-    #topPanel{
-        display: none !important;
-    }
-}
-
-input[type="range"] {accent-color:#42769f; float:left;}
-
 </style>
 </head>
 
 <body>
-    <div id="topPanel">
-    <label style="margin-left:10px" for="iterationsText">iterations</label>      
+  <div id="topPanel" class="top-panel">
+    <label style="margin-left:10px" for="iterationsText">Iterations</label>
     <button class="minus-btn blue" onclick="changeIterations(-1, true)">-</button>
     <div class="number-text" id="iterationsText">0</div>
     <button class="plus-btn blue" onclick="changeIterations(1, true)">+</button>
-
-    <label style="margin-left:10px" for="lineLengthText">line length</label>      
+    <label style="margin-left:10px" for="lineLengthText">Line Length</label>
     <button class="minus-btn blue" onclick="changeLineLength(-1, true)">-</button>
     <div class="number-text" id="lineLengthText">0</div>
     <button class="plus-btn blue" onclick="changeLineLength(1, true)">+</button>
-
-    <label style="margin-left:10px" for="turnAngleText">turn angle</label>      
+    <label style="margin-left:10px" for="turnAngleText">Turn Angle</label>
     <button class="minus-btn blue" onclick="changeTurnAngle(-1, true)">-</button>
     <div class="number-text" id="turnAngleText">0</div>
     <button class="plus-btn blue" onclick="changeTurnAngle(1, true)">+</button>
-
-    <label style="margin-left:10px" for="lsysMenu">L System</label>  
+    <label style="margin-left:10px" for="lsysMenu">Type</label>
     <select id="lsysMenu" onchange="changeFromMenu(true)"></select>
-
-    <button style="margin-left:10px;" onclick="saveSvg()">Save SVG</button>
-    <button style="margin-left:10px;" onclick="savePng()">Save PNG</button>
-    
+    <button onclick="openModal('modalSave')">Save</button>    
     <input id="colourPicker1" type="color" value="#000000" />
     <input id="colourPicker2" type="color" value="#ffffff" />
-    
-    <button onclick="copySvgToClipboard(layer1)">copy to clipboard</button>
-    
-    <div class="label">zoom</div>  
+    <button onclick="copySvgToClipboard(layer1)">Copy to Clipboard</button>
+    <div class="label">Zoom</div>
     <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" />
     <div id="zoomText" class="range-label">100%</div>
-    
-    <div class="label">outline inside</div>  
+    <div class="label">Outline Inside</div>
     <input id="outlineInsideRange" type="range" min="0" max="10" value="2" class="range" oninput="changeOutlineInside(this.value)" />
-    <div id="outlineInsideText" class="range-label">2</div>   
-    
-    <div class="label">outline</div>  
+    <div id="outlineInsideText" class="range-label">2</div>
+    <div class="label">Outline</div>
     <input id="outlineRange" type="range" min="0" max="10" value="2" class="range" oninput="changeOutline(this.value)" />
-    <div id="outlineText" class="range-label">2</div> 
-
-</div>
-<div id="main">
+    <div id="outlineText" class="range-label">2</div>
+  </div>
+<div id="main" class="main">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" id="designSvg" height="1080" width="1080">
         <g id="layer0"><rect id="background" width="1080" height="1080" fill="#ffffff" /></g>
         <g id="layer1"></g>
-        <g id="layer2"></g>    
+        <g id="layer2"></g>
     </svg>
     <style>svg { background-color: rgba(255, 255, 255, 1); }</style>
-    <div id="output"></div>
     <div><canvas id="svgCanvas"></canvas></div>
 </div>
-</body>
 
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <span class="close" onclick="closeModal()" id="closeModalButton">&times;</span>
+
+    <div id="modalAddDrawing" class="modal-content">
+      <h2>Add Drawing</h2>
+      <div>
+        <input id="addNewDrawingInput" class="dom-ctrl" type="text" placeholder="Type drawing title here...">
+        <button onclick="addDrawing(false)">Add New Drawing</button>
+        <button onclick="addDrawing(true)">Save As New</button>
+      </div>
+    </div>
+
+    <div id="modalSave" class="modal-content">
+      <h2>Save As</h2>
+      <div>
+        <div id="lastSavedText" class="dom-el"></div>
+        <button onclick="savePng()">Save PNG</button>
+        <button onclick="saveSvg()">Save SVG</button>        
+      </div>
+    </div>
+<!--
+    <div id="modalRenameDrawing" class="modal-content">
+      <h2>Rename Drawing</h2>
+      <div>
+        <input id="drawingTitleInput" class="dom-ctrl" type="text" placeholder="Type drawing title here...">
+        <button onclick="renameDrawing()">Rename Drawing</button>
+      </div>
+    </div>
+-->
+    <div id="modalSaveSettings" class="modal-content">
+      <h2>Save Setting</h2>
+      <div>
+        <input id="saveSettingsInput" class="dom-ctrl" type="text" placeholder="Type settings title here...">
+        <button onclick="saveSettings()">Save Setting</button>
+      </div>
+    </div>
+    </div>
+</div>
+
+
+</body>
 <script>
+// --- Global Declarations ---
 const svgns = "http://www.w3.org/2000/svg";
 const container = document.getElementById('designSvg');
 const layer1 = document.getElementById('layer1');
-const lSystemList = [];
 const lsysMenu = document.getElementById('lsysMenu');
 const colourPicker1 = document.getElementById('colourPicker1');
 const colourPicker2 = document.getElementById('colourPicker2');
+const modal = document.getElementById('myModal');
 
+let center = {x:540, y:540};
+let lineLength = 10;
+let currentPosition = center;
+let nextPosition = center;
+let posList = [currentPosition];
+let convertList = ["X", "Y"];
+let iterations = 3;
+let turnAngle = 90;
+let scaleFactor = 0.6;
+let lSys = {};
+let branchAngle = 90;
+let branchColours = ["#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612","#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612"];
+let designMin = {};
+let designMax = {};
+
+const app = new function () {
+  this.penDown = true;
+  this.branchList = [];
+  this.branchIndex = 0;
+  this.recursiveBranchDepthIndex = 0;
+}
+
+// L-Systems written by Paul Bourke, Chris Wallace, Hasan Hosam
+// F - Move forward by line length drawing a line
+// + - Turn left by turning angle
+// - - Turn right by turning angle
+const lSystemData = [
+  {
+    title: "Square Sierpinski",
+    axiomStr: "F+XF+F+XF",
+    ruleSets: ["XF-F+F-XF+F+XF-F+F-X"],
+    axiomLetters: ["X"],
+    turningAngle: 90,
+    convertList: ["X"],
+    startAngle: 0,
+    branching: false,
+    tags: ["sierpinski", "space-filling", "classic"]
+  },
+  {
+    title: "Kosh Showflake",
+    axiomStr: "F ++F ++F",
+    ruleSets: ["F -F ++F -F"],
+    axiomLetters: ["F"],
+    turningAngle: 60,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "classic", "curve"]
+  },
+  {
+    title: "Hilbert Curve",
+    axiomStr: "X",
+    ruleSets: ["-YF+XFX+FY-", "+XF-YFY-FX+"],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["hilbert", "space-filling", "classic"]
+  },
+  {
+    title: "Crystal",
+    axiomStr: "F +F +F +F",
+    ruleSets: ["F F +F ++F +F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["polygonal", "decorative", "classic"]
+  },
+  {
+    title: "Sierpinski Arrowhead",
+    axiomStr: "YF",
+    ruleSets: ["YF+XF+Y", "XF-YF-X"],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 60,
+    convertList: ["X", "Y"],
+    startAngle: 0,
+    branching: false,
+    tags: ["sierpinski", "curve", "classic"]
+  },
+
+  {
+    title: "Sierpinski Arrowhead 2",
+    axiomStr: "A",
+    ruleSets: ["B-A-B", "A+B+A"],
+    axiomLetters: ["A", "B"],
+    turningAngle: 60,
+    convertList: ["A", "B"],
+    startAngle: 0,
+    branching: false,
+    tags: ["sierpinski", "curve", "variant"]
+  },
+
+  {
+    title: "Sierpinski Triangle",
+    axiomStr: "F-G-G",
+    ruleSets: ["F-G+F+G-F", "GG"],
+    axiomLetters: ["F", "G"],
+    turningAngle: 120,
+    convertList: ["F", "G"],
+    startAngle: 0,
+    branching: false,
+    tags: ["sierpinski", "space-filling", "classic"]
+  },
+  {
+    title: "Koch Curve",
+    axiomStr: "F",
+    ruleSets: ["F+F-F-F+F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "curve", "classic"]
+  },
+  {
+    title: "Quadratic Snowflake",
+    axiomStr: "F",
+    ruleSets: ["F-F+F+F-F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "polygonal", "decorative"]
+  },
+  {
+    title: "Rings",
+    axiomStr: "F +F +F +F",
+    ruleSets: ["F F +F +F +F +F +F -F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 45,
+    branching: false,
+    tags: ["polygonal", "decorative"]
+  },
+  {
+    title: "Dragons Curve",
+    axiomStr: "FX",
+    ruleSets: ["X+YF+", "-FX-Y"],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["dragon", "curve", "classic"]
+  },
+  {
+    title: "Quadratic Gosper",
+    axiomStr: "-YF",
+    ruleSets: [
+      "XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
+      "+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"
+    ],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["gosper", "space-filling", "classic"]
+  },
+  {
+    title: "Quadratic Koch Island",
+    axiomStr: "F+F+F+F",
+    ruleSets: ["F+F-F-FFF+F+F-F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "polygonal", "classic"]
+  },
+  {
+    title: "Quadratic Koch Island 2",
+    axiomStr: "F+F+F+F",
+    ruleSets: ["F-FF+FF+F+F-F-FF+F+F-F-FF-FF+F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "polygonal", "variant"]
+  },
+  {
+    title: "Quadratic Koch Island Hosam",
+    axiomStr: "X+X+X+X+X+X+X+X",
+    ruleSets: [
+      "X+YF++YF-FX--FXFX-YF+X",
+      "-FX+YFYF++YF+FX--FX-YF"
+    ],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 45,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "gosper", "experimental"]
+  },
+  {
+    title: "Peano Curve",
+    axiomStr: "X",
+    ruleSets: [
+      "XFYFX+F+YFXFY-F-XFYFX",
+      "YFXFY-F-XFYFX+F+YFXFY"
+    ],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 90,
+    branching: false,
+    tags: ["peano", "space-filling", "classic"]
+  },
+  {
+    title: "Pentaplexity",
+    axiomStr: "F++F++F++F++F",
+    ruleSets: ["F++F++F|F-F++F"],
+    axiomLetters: ["F"],
+    turningAngle: 36,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["polygonal", "decorative", "classic"]
+  },
+  {
+    title: "Hexagonal Gosper",
+    axiomStr: "XF",
+    ruleSets: [
+      "X+YF++YF-FX--FXFX-YF+",
+      "-FX+YFYF++YF+FX--FX-Y"
+    ],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 60,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["gosper", "space-filling", "classic"]
+  },
+  {
+    title: "Levy Curve",
+    axiomStr: "F",
+    ruleSets: ["-F++F-"],
+    axiomLetters: ["F"],
+    turningAngle: 45,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["curve", "classic"]
+  }
+];
 
 function changeOutlineInside(){
-    changeFromMenu(true)
+  changeFromMenu(true)
 }
 
 function changeOutline(){
-    changeFromMenu(true)
+  changeFromMenu(true)
 }
 
 function changeZoomRange(zoom){
-
-    zoomText.innerHTML = zoom;
-
-    const newSize = Math.floor((100/zoom)*1080);   
-    container.setAttribute("viewBox", "0 0 " + newSize + " " + newSize);
-    updateCrop();
-    saveLocalStorage();
+  zoomText.innerHTML = zoom;
+  const newSize = Math.floor((100/zoom)*1080);
+  container.setAttribute("viewBox", "0 0 " + newSize + " " + newSize);
+  updateCrop();
+  saveLocalStorage();
 }
 
-
-
 function rotateAroundPoint(centerOfRotation, degrees, length){
-	var xRot = centerOfRotation.x + (Math.cos(Math.PI/180 * degrees)*length);
-	var yRot = centerOfRotation.y + (Math.sin(Math.PI/180 * degrees)*length);
-	return {x:xRot,y:yRot};
+  let xRot = centerOfRotation.x + (Math.cos(Math.PI/180 * degrees)*length);
+  let yRot = centerOfRotation.y + (Math.sin(Math.PI/180 * degrees)*length);
+  return {x:xRot,y:yRot};
 }
 
 function createCircle(id, pos, r, stroke, fill, strokeWidth){
-		var circle = document.createElementNS(svgns, 'circle');
-		circle.setAttributeNS(null, 'id', id);
-		circle.setAttributeNS(null, 'cx', pos.x);
-        circle.setAttributeNS(null, 'cy', pos.y);
-        circle.setAttributeNS(null, 'r', r);
-		circle.setAttributeNS(null, 'style', 'fill:' + fill + '; stroke:' + stroke + ';  opacity:1; stroke-width:' + strokeWidth + ';' );
-		layer1.appendChild(circle);
+  let circle = document.createElementNS(svgns, 'circle');
+  circle.setAttributeNS(null, 'id', id);
+  circle.setAttributeNS(null, 'cx', pos.x);
+    circle.setAttributeNS(null, 'cy', pos.y);
+    circle.setAttributeNS(null, 'r', r);
+  circle.setAttributeNS(null, 'style', 'fill:' + fill + '; stroke:' + stroke + ';  opacity:1; stroke-width:' + strokeWidth + ';' );
+  layer1.appendChild(circle);
 }
-     
 
 function createPath(posList, fill, stroke, strokeWidth, adjx, adjy){
-	    var path = document.createElementNS(svgns, 'path');
-		var d = "M" + (posList[0].x + adjx) + " " + (posList[0].y + adjy);
-		//d += "A 1300 1300 0 0 1 "+ posList[1].x + " " + posList[1].y;
-       
-		for(var i=1; i<posList.length; i++) {
-            var pos = posList[i]
-            var com = (pos.command=="M")? " M":" L";
-			d += com + (pos.x + adjx) + " " + (pos.y + adjy);
-		}
+    let path = document.createElementNS(svgns, 'path');
+    let d = "M" + (posList[0].x + adjx) + " " + (posList[0].y + adjy);
+    //d += "A 1300 1300 0 0 1 "+ posList[1].x + " " + posList[1].y;
+
+    for(let i=1; i<posList.length; i++) {
+            let pos = posList[i]
+            let com = (pos.command=="M")? " M":" L";
+      d += com + (pos.x + adjx) + " " + (pos.y + adjy);
+    }
         path.setAttributeNS(null, 'd', d);
-		path.setAttributeNS(null, 'style', 'fill:' + fill + '; stroke:' + stroke + ';  opacity:1; stroke-width:' + strokeWidth + ';');
+    path.setAttributeNS(null, 'style', 'fill:' + fill + '; stroke:' + stroke + ';  opacity:1; stroke-width:' + strokeWidth + ';');
         layer1.appendChild(path);
 }
 
-
-//F	         Move forward by line length drawing a line
-//+	         Turn left by turning angle
-//-	         Turn right by turning angle
-var center = {x:540, y:540};
-var lineLength = 10;
-var currentPosition = center;
-var nextPosition = center;
-var posList = [currentPosition];
-var convertList = ["X", "Y"];
-var iterations = 3;
-var turnAngle = 90;
-var scaleFactor = 0.6;
-var lSys = {};
-var branchAngle = 90;
-var branchColours = ["#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612","#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612"];
-
 function lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching){
-    this.title = title;
-    this.axiomStr = axiomStr;  
-    this.axiomLetters = axiomLetters;
-    this.ruleSets = ruleSets;
-    this.turningAngle = turningAngle;
-    this.convertList = convertList;
-    this.startAngle = startAngle;
-    this.branching = branching;
+  this.title = title;
+  this.axiomStr = axiomStr;
+  this.axiomLetters = axiomLetters;
+  this.ruleSets = ruleSets;
+  this.turningAngle = turningAngle;
+  this.convertList = convertList;
+  this.startAngle = startAngle;
+  this.branching = branching;
 }
 
 function changelSystem(title){
-    if(title != lSys.title){ //change only if system is different
-        console.log("change: ", title, lSys.title)
-        iterations = 3;    
-        changeIterations(0, false)        
-        var index = lSystemList.findIndex(x => x.title === title);
-        lSys = lSystemList[index];
-        turnAngle = lSys.turningAngle;
-        changeTurnAngle(0, false);
-    }
+  if(title != lSys.title){ //change only if system is different
+    iterations = 3;
+    changeIterations(0, false)
+    let index = lSystemData.findIndex(x => x.title === title);
+    lSys = lSystemData[index];
+    turnAngle = lSys.turningAngle;
+    changeTurnAngle(0, false);
+  }
 }
 
-//Square Sierpinski
-//Written by Paul Bourke
-//August 1990
-//First reported circa 1912
-//axiom = F+XF+F+XF
-//X -> XF-F+F-XF+F+XF-F+F-X
-var title = "Square Sierpinski"
-var axiomStr = "F+XF+F+XF"
-var ruleSets = ["XF-F+F-XF+F+XF-F+F-X"];
-var axiomLetters = ["X"];
-var turningAngle = 90;
-var convertList = ["X"];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Kosh Showflake";
-var axiomStr = "F ++F ++F";
-var axiomLetters = ["F"];
-var ruleSets = ["F -F ++F -F"];
-var turningAngle = 60;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//Hilbert
-//Written by Paul Bourke
-//June 1990
-//Attributed to the German mathematician David Hilbert, circa 1891
-//axiom = X
-//X -> -YF+XFX+FY-
-//Y -> +XF-YFY-FX+
-var title = "Hilbert Curve";
-var axiomStr = "X";
-var ruleSets = ["-YF+XFX+FY-", "+XF-YFY-FX+"];
-var axiomLetters = ["X","Y"];
-var turningAngle = 90;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Crystal
-//Written by Paul Bourke
-//June 1990
-//axiom = F+F+F+F
-//F -> FF+F++F+F
-var title = "Crystal";
-var turningAngle = 90;
-var axiomStr = "F +F +F +F";
-var ruleSets = ["F F +F ++F +F"];
-var axiomLetters = ["F"];
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//Sierpinski Arrowhead
-//Written by Paul Bourke
-//June 1990
-var title = "Sierpinski Arrowhead"
-var axiomStr = "YF";
-var ruleSets = ["YF+XF+Y","XF-YF-X"]
-var axiomLetters = ["X","Y"];
-var turningAngle = 60;
-var convertList = ["X","Y"];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Sierpinski Arrowhead 2"
-var axiomStr = "A";
-var ruleSets = ["B-A-B","A+B+A"]
-var axiomLetters = ["A","B"];
-var turningAngle = 60;
-var convertList = ["A","B"];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-var title = "Sierpinski Triangle"
-var axiomStr = "F-G-G";
-var ruleSets = ["F-G+F+G-F","GG"]
-var axiomLetters = ["F","G"];
-var turningAngle = 120;
-var convertList = ["F","G"];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-var title = "Koch curve"
-//A variant of the Koch curve which uses only right angles.
-//variables : F
-//constants : + −
-//start  : F
-//rules  : (F → F+F−F−F+F)
-var axiomStr = "F";
-var ruleSets = ["F+F-F-F+F"];
-var axiomLetters = ["F"];
-var turningAngle = 90;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Quadratic Snowflake"
-//A variant of the Koch curve which uses only right angles.
-//variables : F
-//constants : + −
-//start  : F
-//rules  : (F → F+F−F−F+F)
-var axiomStr = "F";
-var ruleSets = ["F-F+F+F-F"];
-var axiomLetters = ["F"];
-var turningAngle = 90;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Quadratic Snowflake
-//Written by Paul Bourke
-//July 1990
-//axiom = F
-//F -> F-F+F+F-F
-//angle = 90
-var title = "Rings";
-var axiomStr = "F +F +F +F";
-var ruleSets = ["F F +F +F +F +F +F -F"];
-var axiomLetters = ["F"];
-var turningAngle = 90
-var convertList = [];
-var startAngle = 45;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//axiom = FX
-//X -> X+YF+
-//Y -> -FX-Y
-var title = "Dragons curve";
-var axiomStr = "FX";
-var ruleSets = ["X+YF+"," -FX-Y"]
-var axiomLetters = ["X","Y"];
-var turningAngle = 90;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Quadratic Gosper
-//Written by Paul Bourke
-//June 1990
-//Attributed to Dekking, 1982
-//axiom = -YF
-//X -> XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-
-//Y -> +FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY
-//angle = 90
-var title = "Quadratic Gosper";
-var axiomStr = "-YF";
-var ruleSets = [
-"XFX-YF-YF+FX+FX-YF-YFFX+YF+FXFXYF-FX+YF+FXFX+YF-FXYF-YF-FX+FX+YFYF-",
-"+FXFX-YF-YF+FX+FXYF+FX-YFYF-FX-YF+FXYFYF-FX-YFFX+FX+YF-YF-FX+FX+YFY"]
-var axiomLetters = ["X","Y"];
-var turningAngle = 90;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Quadratic Koch Island
-//Written by Paul Bourke
-//July 1990
-/*
-axiom = F+F+F+F
-F -> F+F-F-FFF+F+F-F
-angle = 90
-String length: 63
-*/
-var title = "Quadratic Koch Island";
-var axiomStr = "F+F+F+F";
-var ruleSets = ["F+F-F-FFF+F+F-F"];
-//var ruleSets = ["F +F -F -F F +F +F -F"]; //- first one
-var axiomLetters = ["F"];
-var turningAngle = 90;
-var convertList = [];
-var startAngle = 0;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-/*
-axiom = F+F+F+F
-F -> F-FF+FF+F+F-F-FF+F+F-F-FF-FF+F
-angle = 90
-*/
-var title = "Quadratic Koch Island 2";
-var axiomStr = "F+F+F+F";
-var ruleSets = ["F-FF+FF+F+F-F-FF+F+F-F-FF-FF+F"];
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-/*
-Variation by Hasan Hosam.
-December 2018
-axiom = X+X+X+X+X+X+X+X
-X -> X+YF++YF-FX--FXFX-YF+X
-Y -> -FX+YFYF++YF+FX--FX-YF
-angle = 45
-*/
-
-var title = "Quadratic Koch Island Hosam";
-var axiomStr = "X+X+X+X+X+X+X+X";
-var ruleSets = ["X+YF++YF-FX--FXFX-YF+X","-FX+YFYF++YF+FX--FX-YF"];
-//var convertList = ["X","Y"]
-var axiomLetters = ["X","Y"];
-var turningAngle = 45;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Peano Curve
-//Written by Paul Bourke
-//June 1990
-//First documented circa 1890
-
-var title = "Peano Curve";
-var axiomStr = "X";
-var ruleSets = ["XFYFX+F+YFXFY-F-XFYFX", "YFXFY-F-XFYFX+F+YFXFY"];
-var axiomLetters = ["X","Y"];
-var turningAngle = 90;
-//var convertList = ["X","Y"];
-var startAngle = 90;
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//Pentaplexity
-//Written by Paul Bourke
-//September 1990
-//axiom = F++F++F++F++F
-//F -> F++F++F|F-F++F
-//angle = 36
-var title = "Pentaplexity";
-var axiomStr = "F++F++F++F++F";
-var ruleSets = ["F++F++F|F-F++F"];
-var axiomLetters = ["F"];
-var turningAngle = 36;
-var startAngle = 0;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//Hexagonal Gosper
-//Written by Paul Bourke
-//July 1990
-//Attributed to Mandelbrot, 1982
-//axiom = XF
-//X -> X+YF++YF-FX--FXFX-YF+
-//Y -> -FX+YFYF++YF+FX--FX-Y
-//angle = 60
-var title = "Hexagonal Gosper";
-var axiomStr = "XF";
-var ruleSets = ["X+YF++YF-FX--FXFX-YF+","-FX+YFYF++YF+FX--FX-Y"];
-var axiomLetters = ["X","Y"];
-var turningAngle = 60;
-var startAngle = 0;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//Lévy curve
-//Written by Paul Bourke
-//February 2019
-//axiom = F
-//F -> -F++F-
-//angle = 45
-var title = "Levy curve";
-var axiomStr = "F";
-var ruleSets = ["-F++F-"];
-var axiomLetters = ["F"];
-var turningAngle = 45;
-var startAngle = 0;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Kolam
-//January 2019
-//axiom = (-D--D)
-//A -> F++FFFF--F--FFFF++F++FFFF--F
-//B -> F--FFFF++F++FFFF--F--FFFF++F
-//C -> BFA--BFA
-//D -> CFC--CFC
-//angle = 45
-var title = "Kolam";
-var axiomStr = "-D--D";
-var ruleSets = ["F++FFFF--F--FFFF++F++FFFF--F","F--FFFF++F++FFFF--F--FFFF++F","BFA--BFA","CFC--CFC"];
-var axiomLetters = ["A","B","C","D"];
-var convertList = [];
-//var convertList = ["A","B","C","D"];
-var turningAngle = 45;
-var startAngle = 0;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-/*
-
-Snake Kolam
-Written by Paul Bourke
-axiom = F+XF+F+XF
-X -> X{F-F-F}+XF+F+X{F-F-F}+X
-angle = 90
-{}== open/close polygon
-*/
-
-var title = "Snake Kolam";
-var axiomStr = "F+XF+F+XF";
-var ruleSets = ["X{F-F-F}+XF+F+X{F-F-F}+X"];
-var axiomLetters = ["X"];
-var convertList = [];
-var turningAngle = 90;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-
-/*
-Mango Leaf
-Written by Paul Bourke
-axiom = Y---Y
-X -> {F-F}{F-F}--[--X]{F-F}{F-F}--{F-F}{F-F}--
-Y -> f-F+X+F-fY
-angle = 60
-f	         Move forward by line length without drawing a line
-*/
-var title = "Mango Leaf";
-var axiomStr = "Y---Y";
-var ruleSets = ["{F-F}{F-F}--[--X]{F-F}{F-F}--{F-F}{F-F}--","f-F+X+F-fY"];
-var axiomLetters = ["X","Y"];
-var convertList = [];
-var turningAngle = 60;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-
-
-
-//Classic Sierpinski Curve
-//Written by Paul Bourke
-//Rules by Chris Wallace
-//November 2019
-var title = "Classic Sierpinski Curve";
-var axiomStr = "F--XF--F--XF";
-var ruleSets = ["XF+F+XF--F--XF+F+X"]
-var axiomLetters = ["X"];
-var convertList = ["F","X"];
-var turningAngle = 45;
-var startAngle = 0; //45
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//Angle 90
-//Axiom F
-//F —> F+F−F−F−G+F+F+F−F
-//G —> GGG
-var title = "Sierpinski Carpet";
-var axiomStr = "F";
-//var ruleSets = ["F+F-F-F-G+F+F+F-F", "GGG"];
-var ruleSets = ["F+F-F-F-UGD+F+F+F-F", "GGG"]; //Don't draw through lines
-var axiomLetters = ["F","G"];
-var convertList = ["G"];
-var turningAngle = 90;
-var startAngle = 45; 
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Test";
-var axiomStr = "F";
-//var ruleSets = ["F+F-F-F-G+F+F+F-F", "GGG"];
-var ruleSets = ["+FUGDF", "+FUGD"]; //Don't draw through lines
-var axiomLetters = ["F","G"];
-var convertList = ["G"];
-var turningAngle = 0;
-var startAngle = 0; 
-var branching = false;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-//Cross
-//Written by Paul Bourke
-//August 1990
-//axiom = F+F+F+F
-//F -> F+F-F+F+F
-//angle = 90
-var title = "Cross";
-var axiomStr = "F+F+F+F";
-var ruleSets = ["F+F-F+F+F"];
-var axiomLetters = ["F"];
-var convertList = [];
-var startAngle = 0;
-var turningAngle = 90;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-
-var title = "Cross 2";
-var axiomStr = "F+F+F+F";
-var ruleSets = ["F+FF++F+F"];
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-
-
-
-
-
-//Triangle
-//Written by Paul Bourke
-//July 1990
-var title = "Triangle";
-var axiomStr = "F+F+F";
-var ruleSets = ["F-F+F"];
-var axiomLetters = ["F"];
-var convertList = [];
-var startAngle = -90;
-var turningAngle = 120;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Tree";
-var axiomStr = "F";
-var ruleSets = ["F[+F][-F]"];
-var axiomLetters = ["F"];
-//var turningAngle = 60;
-var turningAngle = 60;
-var convertList = [];
-var startAngle = -90;
-var branching = true;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Tree 2";
-var ruleSets = ["F[+F]F[+F][-F]"];
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-var title = "Tree 3";
-var ruleSets = ["F[+F][-F]F[+F][-F]"];
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-//axiom = FX
-//X -> >[-FX]+FX
-//angle = 40
-
-var title = "Tree 4"
-var axiomStr = "FX";
-var ruleSets = ["[-FX]+FX"];
-var axiomLetters = ["X"];
-var convertList = [];
-var turningAngle = 40;
-lSystemList.push(new lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching));
-
-/*
-L-System Leaf
-Written by Paul Bourke
-axiom = a
-F -> >F<
-a -> F[+x]Fb
-b -> F[-y]Fa
-x -> a
-y -> b
-angle = 45
-length factor = 1.36
-*/
-
-function populateLSysMenu(){    
-    for(var i=0; i<lSystemList.length; i++){
-        lsysMenu.innerHTML += '<option value="' + lSystemList[i].title + '">' + lSystemList[i].title + '</otion>';
-    }
+function populateLSysMenu(){
+  for(let i=0; i<lSystemData.length; i++){
+    lsysMenu.innerHTML += '<option value="' + lSystemData[i].title + '">' + lSystemData[i].title + '</otion>';
+  }
 }
 
 function changeFromMenu(update){
-    if(update){
-        layer1.innerHTML = "";
-        currentPosition = {x:540, y:540};
-        nextPosition = currentPosition;
-        posList = [currentPosition];    
-        changelSystem(lsysMenu.value);
-        create();
-    }
+  if(update){
+    layer1.innerHTML = "";
+    currentPosition = {x:540, y:540};
+    nextPosition = currentPosition;
+    posList = [currentPosition];
+    changelSystem(lsysMenu.value);
+    create();
+  }
 }
 
-
 function iterate(axiomStr, axiomLetters, ruleSetsruleSets){
-    var iterationStr = axiomStr;
-    for(var i=0; i<lSys.axiomLetters.length; i++){
-        var ruleSet = lSys.ruleSets[i].toLowerCase();
-        iterationStr = replaceGlobally(iterationStr, axiomLetters[i], ruleSet);
-    }
-    iterationStr = iterationStr.replace(/ +(?= )/g,'');
-    
-    return iterationStr.toUpperCase().trim();
+  let iterationStr = axiomStr;
+  for(let i=0; i<lSys.axiomLetters.length; i++){
+      let ruleSet = lSys.ruleSets[i].toLowerCase();
+      iterationStr = replaceGlobally(iterationStr, axiomLetters[i], ruleSet);
+  }
+  iterationStr = iterationStr.replace(/ +(?= )/g,'');
+  return iterationStr.toUpperCase().trim();
 }
 
 function replaceGlobally(original, searchTxt, replaceTxt){
-    const regex = new RegExp(searchTxt, 'g');
-    return original.replace(regex, replaceTxt) ;
+  const regex = new RegExp(searchTxt, 'g');
+  return original.replace(regex, replaceTxt) ;
 }
 
 function getIterationList(){
-    var iterationString = lSys.axiomStr;
-    for(var i=0; i<iterations; i++){
-        iterationString = iterate(iterationString,lSys.axiomLetters, lSys.ruleSets);
-    }
-    iterationString = iterationString.replace(/\s/g, ""); //remove whitespace
-    //console.log(iterationString, iterationString.split(""));   
-    return iterationString.split("");
+  let iterationString = lSys.axiomStr;
+  for(let i=0; i<iterations; i++){
+      iterationString = iterate(iterationString,lSys.axiomLetters, lSys.ruleSets);
+  }
+  iterationString = iterationString.replace(/\s/g, ""); //remove whitespace
+  return iterationString.split("");
 }
 
 function getAngle(str, angle){
-    if(str=="F"){
-        angle = angle;        
-    }else if(str=="-"){
-        angle = angle + turnAngle; 
-    }else if(str=="+"){
-        angle = angle - turnAngle;         
-    }else if(str=="|"){
-        angle = angle + (turnAngle*5); 
-    }
-    return angle;
+  if(str=="F"){
+      angle = angle;
+  }else if(str=="-"){
+      angle = angle + turnAngle;
+  }else if(str=="+"){
+      angle = angle - turnAngle;
+  }else if(str=="|"){
+      angle = angle + (turnAngle*5);
+  }
+  return angle;
 }
-
-const app = new function () {
-    this.penDown = true;
-    this.branchList = [];
-    this.branchIndex = 0;
-    this.recursiveBranchDepthIndex = 0;
-}
-
-
 
 function Branch(pos, angle){
     this.pos = pos;
@@ -760,82 +511,28 @@ function Branch(pos, angle){
     }
 }
 
-
-//var branchLength = [];
-
-
-
-/*
-function populateBranchLength(depth){
-    var bl = 1;
-    var scaleFactor = 0.6;
-    branchLength = [];
-    for(var i=0; i<depth; i++){     
-        branchLength.push(bl-(i*scaleFactor))
-        console.log(branchLength)
-    }
-}
-*/
-//0.66;
-//var scaleFactor = 0.57; //self avoiding
-//var scaleFactor = 0.61803; //self contacting
-var scaleFactor =  0.65 //Self-overlapping
-/*
-function getBranchLength(index){
-    var lineL = lineLength;
-    branchLength = [];
-    for(var i=0; i<index; i++){ 
-        //lineL = lineL * scaleFactor;
-        lineL = lineLength * Math.pow(scaleFactor, i)    
-        
-        branchLength.push(lineL)
-    }  
-    //console.log(branchLength)    
-}
-
-getBranchLength(8);
-*/
-
-/*
-var branchLength = [];
-
-
-
-function setBranchLength(depth){
-    if(branchLength.length<depth){
-        populateBranchLength(depth)
-    }
-}
-*/
-
-
-//populateBranchLength(5);
-
-var startAngle = 0;
-
 function getPosition(str){
     currentPosition = nextPosition;
     //convert X,Y to F
-    for(var i=0; i<lSys.convertList.length; i++){ 
+    for(let i=0; i<lSys.convertList.length; i++){
         str = str.replace(lSys.convertList[i], "F");
-    }   
+    }
     if(str.includes("[")){
         app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
         //console.log("set: ", lSys.startAngle, currentPosition);
         app.branchIndex++;
-        app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle); 
+        app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
         startAngle = app.branchList[app.branchIndex].angle;
-        currentPosition = app.branchList[app.branchIndex].pos;        
-    }else if (str.includes("]")){ 
+        currentPosition = app.branchList[app.branchIndex].pos;
+    }else if (str.includes("]")){
         //reset to previous index settings
         app.branchIndex--;
         startAngle = app.branchList[app.branchIndex].angle;
         currentPosition = app.branchList[app.branchIndex].pos;
-        nextPosition = currentPosition; 
+        nextPosition = currentPosition;
         //console.log("reset: ", lSys.startAngle, currentPosition);
-    }else{            
-    startAngle = getAngle(str, startAngle);    
-    //console.log(str, app.branchIndex, app.branchList[app.branchIndex]);
+    }else{
+    startAngle = getAngle(str, startAngle);
         if(str.includes("F")){
             lineLen = (lSys.branching)? ((lineLength * Math.pow(scaleFactor, app.branchIndex))*20):lineLength
             //lineLen = (lSys.branching)? (lineLength * branchLength[app.branchIndex]):lineLength
@@ -843,7 +540,7 @@ function getPosition(str){
             nextPosition.command = "S";
             if(lSys.branching){
                 createPath([currentPosition,nextPosition], "rgba(0,0,0,0.05)", branchColours[app.branchIndex], 1, 0, 0);
-            }        
+            }
         }else{
             nextPosition = currentPosition;
             nextPosition.command = "S";
@@ -851,16 +548,12 @@ function getPosition(str){
                 app.penDown = false;
             }else if(str.includes("D")){
                 app.penDown = true;
-                nextPosition.command = "M";                                
+                nextPosition.command = "M";
             }
-            //console.log(nextPosition) 
-        } 
+            //console.log(nextPosition)
+        }
     }
-    
-    //console.log(str, app.penDown, nextPosition.command)
 }
-var designMin = {};
-var designMax = {};
 
 function resetMinMax(){
     designMin = {x:1000, y:1000}
@@ -875,7 +568,7 @@ function minMaxer(pos){
 }
 
 function transformPoint(pos){
-    var pt = designSvg.createSVGPoint();
+    let pt = designSvg.createSVGPoint();
     pt.x = pos.x;
     pt.y = pos.y;
     return pt.matrixTransform(designSvg.getScreenCTM().inverse());
@@ -884,96 +577,76 @@ function transformPoint(pos){
 function drawFromList(iterationList){
     resetMinMax();
     startAngle = lSys.startAngle;
-    //console.log(currentPosition, lSys.startAngle);
     app.branchList[0] = new Branch(currentPosition, lSys.startAngle);
-    for(var i=0; i<iterationList.length; i++){
-        var ruleLetter = iterationList[i];
+    for(let i=0; i<iterationList.length; i++){
+        let ruleLetter = iterationList[i];
         getPosition(ruleLetter);
-        //console.log(nextPosition)
         if((currentPosition != nextPosition) || (nextPosition.command == "M" & app.penDown)){ // & app.penDown
             minMaxer(nextPosition)
-            //console.log(nextPosition, app.penDown)
             posList.push(nextPosition);
         }
-        
-    }
-    //console.log(designMin,designMax, (designMax.x - designMin.x), (designMax.y - designMin.y))
-    //createPath([designMin,designMax], "#ff0000", "#ff0000", 1, 0, 0);    
-    //designMinTransformed = transformPoint(designMin);
-    //designMaxTransformed = transformPoint(designMax);
-    //console.log(designMinTransformed,designMaxTransformed, (designMaxTransformed.x - designMinTransformed.x), (designMaxTransformed.y - designMinTransformed.y))
-    var adjustx =  designMin.x + ((designMax.x - designMin.x) * 0.5);
-    var adjusty =  designMin.y + ((designMax.y - designMin.y) * 0.5);
-    var adjx = center.x - adjustx;
-    var adjy = center.y - adjusty;
-    
-    
 
-    outline = outlinePoints(posList, true, outlineInsideRange.value, true)
-    createPath(outline, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy)
+    }
+
+    let adjustx =  designMin.x + ((designMax.x - designMin.x) * 0.5);
+    let adjusty =  designMin.y + ((designMax.y - designMin.y) * 0.5);
+    let adjx = center.x - adjustx;
+    let adjy = center.y - adjusty;
+
+
+    outline = outlinePoints(posList, true, outlineInsideRange.value, true);
     
-    //console.log(adjx, adjy)         
-    //createCircle("x", {x:adjustx, y:adjusty}, 4, "#00ff00", "#00ff00", 0)    
+    //createPath(outline, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
+    //createCircle("x", {x:adjustx, y:adjusty}, 4, "#00ff00", "#00ff00", 0)
     if(!lSys.branching){
-        var col1 = colourPicker1.value
-        var col2 = colourPicker2.value
+        let col1 = colourPicker1.value
+        let col2 = colourPicker2.value
         document.getElementById("background").setAttribute("fill", col2);
-        var print = false;
+        let print = false;
         if(print){
             createPath(posList, "rgba(0,0,0,0.0)", "#000", 4, adjx, adjy);
             createPath(posList, "rgba(0,0,0,0.0)", "#fff", 3, adjx, adjy);
         }else{
-            createPath(posList, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy); 
+            createPath(posList, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
         }
-    }    
+    }
     //createCircle("x", {x:600, y:600}, 4, "#00ff00", "#00ff00", 0)
-    
-
     outline = outlinePoints(posList, false, outlineRange.value, true)
-    createPath(outline, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
-
-    
-    
+    //createPath(outline, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
 }
 
 function create(){
-    var iterationList = getIterationList();
-    //console.log(app.branchList.length, branchLength.length)    
-    //setBranchLength(app.branchList.length+1)    
+    let iterationList = getIterationList();
     drawFromList(iterationList);
-    
-    
 }
 
 function clamp(min, max, val, original){
-    if((val+original<min) || (val+original>max)){
-        val=0;
-    }
-    return val;
+  if((val+original<min) || (val+original>max)){
+    val=0;
+  }
+  return val;
 }
 
 function changeIterations(val, update){
     val = clamp(0, 20, val ,iterations);
     iterations += val;
     document.getElementById("iterationsText").innerHTML = iterations;
-    changeFromMenu(update); 
+    changeFromMenu(update);
 }
 
 function changeLineLength(val, update){
     val = clamp(1, 50, val ,lineLength);
-    lineLength += val;    
+    lineLength += val;
     document.getElementById("lineLengthText").innerHTML = lineLength;
-    changeFromMenu(update); 
+    changeFromMenu(update);
 }
-
 
 function changeTurnAngle(val, update){
     val = clamp(0, 360, val ,turnAngle);
     turnAngle += val;
     document.getElementById("turnAngleText").innerHTML = turnAngle;
-    changeFromMenu(update); 
+    changeFromMenu(update);
 }
-
 
 function getIndex(num, total){
     let index = num % total
@@ -984,32 +657,32 @@ function getIndex(num, total){
 }
 
 function lineAngle(pos1, pos2, positiveOnly){
-	var deltaX = pos2.x - pos1.x ;
-	var deltaY = pos2.y - pos1.y;
-	var rad = Math.atan2(deltaY, deltaX); // In radians
-	var deg = rad * (180 / Math.PI); // In degrees
-	if(positiveOnly){
+  let deltaX = pos2.x - pos1.x ;
+  let deltaY = pos2.y - pos1.y;
+  let rad = Math.atan2(deltaY, deltaX); // In radians
+  let deg = rad * (180 / Math.PI); // In degrees
+  if(positiveOnly){
         if(deg<0){
             deg+=360}
         ;
-    } 
+    }
     return Number(deg.toFixed(5));
 }
 
 //improved line intersect - includes is the intersection along the segments
 function lineIntersect(pos1, pos2, pos3, pos4, alongSegment){
   // Check if none of the lines are of length 0
-	if ((pos1.x === pos2.x && pos1.y === pos2.y) || (pos3.x === pos4.x && pos3.y === pos4.y)) {
-		return false;
-	}
-	var denominator = ((pos4.y - pos3.y) * (pos2.x - pos1.x) - (pos4.x - pos3.x) * (pos2.y - pos1.y));
+  if ((pos1.x === pos2.x && pos1.y === pos2.y) || (pos3.x === pos4.x && pos3.y === pos4.y)) {
+    return false;
+  }
+  let denominator = ((pos4.y - pos3.y) * (pos2.x - pos1.x) - (pos4.x - pos3.x) * (pos2.y - pos1.y));
   // Lines are parallel
-	if (denominator === 0) {
-		return false;
-	}
-	let ua = ((pos4.x - pos3.x) * (pos1.y - pos3.y) - (pos4.y - pos3.y) * (pos1.x - pos3.x)) / denominator;
-	let ub = ((pos2.x - pos1.x) * (pos1.y - pos3.y) - (pos2.y - pos1.y) * (pos1.x - pos3.x)) / denominator;
-  
+  if (denominator === 0) {
+    return false;
+  }
+  let ua = ((pos4.x - pos3.x) * (pos1.y - pos3.y) - (pos4.y - pos3.y) * (pos1.x - pos3.x)) / denominator;
+  let ub = ((pos2.x - pos1.x) * (pos1.y - pos3.y) - (pos2.y - pos1.y) * (pos1.x - pos3.x)) / denominator;
+
     //is the intersection along the segments
     if(alongSegment==true){
         //console.log("in:", alongSegment)
@@ -1018,107 +691,65 @@ function lineIntersect(pos1, pos2, pos3, pos4, alongSegment){
         }
     }
   // Return a object with the x and y coordinates of the intersection
-	let x = pos1.x + ua * (pos2.x - pos1.x);
-	let y = pos1.y + ua * (pos2.y - pos1.y);
-	return {x, y};
+  let x = pos1.x + ua * (pos2.x - pos1.x);
+  let y = pos1.y + ua * (pos2.y - pos1.y);
+  return {x, y};
 }
 
 function outlinePoints(pointListSrc, outside, width, closed){
-    //console.log(pointListSrc)
     const pointList = Object.create(pointListSrc);
     //remove last as the same as first
-    if(closed) pointList.pop(); 
+    if(closed) pointList.pop();
 
     //console.log(closed)
     const angleAddition = (outside)? 90:-90;
     const loopAddition = (closed)? 1:-1;
     const pointListNew = [];
     const pointListLen = pointList.length;
-    
-    for(var i=0; i<(pointListLen+loopAddition); i++){
-    //for(var i=0; i<pointListLen; i++){
-        var firstPoint = pointList[getIndex(i, pointListLen)];
-        var secondPoint = pointList[getIndex(i+1, pointListLen)];
-        var thirdPoint = pointList[getIndex(i+1, pointListLen)];
-        var fourthPoint = pointList[getIndex(i+2, pointListLen)];
-        
-        //console.log(firstPoint,secondPoint,thirdPoint,fourthPoint)
-        
-        if(firstPoint==undefined || secondPoint==undefined || thirdPoint==undefined || fourthPoint==undefined) return false;     
-                
-        var angle1 = lineAngle(firstPoint, secondPoint, true);
-        var angle2 = lineAngle(thirdPoint, fourthPoint, true);
-        
-        var rotationPoint1 = rotateAroundPoint(firstPoint, angle1+angleAddition, width);
-        var rotationPoint2 = rotateAroundPoint(secondPoint, angle1+angleAddition, width);
-        var rotationPoint3 = rotateAroundPoint(thirdPoint, angle2+angleAddition, width);
-        var rotationPoint4 = rotateAroundPoint(fourthPoint, angle2+angleAddition, width);
-        
-        var intersectPoint = lineIntersect(rotationPoint1, rotationPoint2, rotationPoint3, rotationPoint4, false);        
-        
-        //console.log(intersectPoint)
-        
-        //createCircle("x", intersectPoint, 2, "#ff00ff", "#ff00ff", 0, layer1);
-        //id, pos, r, stroke, fill, strokeWidth    
-        //createPath([rotationPoint1,rotationPoint2], "none", "#333", 1, "cropMask", layerCrop);
-        //createPath([rotationPoint3,rotationPoint4], "none", "#f1f1f1", 1, "cropMask", layerCrop);       
-        
+
+    for(let i=0; i<(pointListLen+loopAddition); i++){
+    //for(let i=0; i<pointListLen; i++){
+        let firstPoint = pointList[getIndex(i, pointListLen)];
+        let secondPoint = pointList[getIndex(i+1, pointListLen)];
+        let thirdPoint = pointList[getIndex(i+1, pointListLen)];
+        let fourthPoint = pointList[getIndex(i+2, pointListLen)];
+
+        if(firstPoint==undefined || secondPoint==undefined || thirdPoint==undefined || fourthPoint==undefined) return false;
+
+        let angle1 = lineAngle(firstPoint, secondPoint, true);
+        let angle2 = lineAngle(thirdPoint, fourthPoint, true);
+
+        let rotationPoint1 = rotateAroundPoint(firstPoint, angle1+angleAddition, width);
+        let rotationPoint2 = rotateAroundPoint(secondPoint, angle1+angleAddition, width);
+        let rotationPoint3 = rotateAroundPoint(thirdPoint, angle2+angleAddition, width);
+        let rotationPoint4 = rotateAroundPoint(fourthPoint, angle2+angleAddition, width);
+
+        let intersectPoint = lineIntersect(rotationPoint1, rotationPoint2, rotationPoint3, rotationPoint4, false);
+
         //draw first point if open !closed
         if(i==0 & !closed){
             console.log("is false")
             pointListNew.push(rotationPoint1);
-            //createCircle("x", rotationPoint1, 1, "#000", "#ff00ff", 0, layer1);            
+            //createCircle("x", rotationPoint1, 1, "#000", "#ff00ff", 0, layer1);
         }
-        var drawLast = (i==pointListLen-2 & !closed)? true:false;     
-    
-        //Draw internal points        
-        if(intersectPoint!=false & !drawLast){    
+        let drawLast = (i==pointListLen-2 & !closed)? true:false;
+
+        //Draw internal points
+        if(intersectPoint!=false & !drawLast){
             pointListNew.push(intersectPoint);
-            //createCircle("x", intersectPoint, 1, "#000", "#ff00ff", 0, layer1);
-        } 
-    
-        //draw last point if open
-        if(drawLast){  
-            var angle3 = lineAngle(pointList[pointListLen-2],pointList[pointListLen-1], true);
-            var rotationPoint5 = rotateAroundPoint(pointList[pointListLen-1], angle3+angleAddition, width);
-            //createCircle("x", rotationPoint5, 1, "#123456", "none", 0, layer1);
-            pointListNew.push(rotationPoint5);      
         }
-    }    
+
+        //draw last point if open
+        if(drawLast){
+            let angle3 = lineAngle(pointList[pointListLen-2],pointList[pointListLen-1], true);
+            let rotationPoint5 = rotateAroundPoint(pointList[pointListLen-1], angle3+angleAddition, width);
+            //createCircle("x", rotationPoint5, 1, "#123456", "none", 0, layer1);
+            pointListNew.push(rotationPoint5);
+        }
+    }
     return pointListNew;
-    
-    
 }
 
-
-
-
-
-
-populateLSysMenu();
-changeTurnAngle(0, false);
-changeIterations(0, false);
-changeLineLength(0, false)
-changeFromMenu(true);
-
-
-//259.9
-//156.7
-//94.7
-/*
-console.log(94.7/259.9);
-console.log(94.7/156.7);
-var r = "0.6"
-console.log((259.9 * Math.pow(r, 0)),  Math.pow(r, 0));
-console.log((259.9 * Math.pow(r, 1)),  Math.pow(r, 1));
-console.log((259.9 * Math.pow(r, 2)),  Math.pow(r, 2));
-console.log((259.9 * Math.pow(r, 3)),  Math.pow(r, 2));
-*/
-
-
-</script>
-
-<script>
 //save image
 function triggerDownload(imgURI) {
   const a = document.createElement('a');
@@ -1126,8 +757,8 @@ function triggerDownload(imgURI) {
   a.target = '_blank';
   a.href = imgURI;
   // trigger download button
-  // (set `bubbles` to false here.
-  // or just `a.click()` if you don't care about bubbling)
+  // (set bubbles to false here.
+  // or just a.click() if you dont care about bubbling)
   a.dispatchEvent(new MouseEvent('click', {
     view: window,
     bubbles: false,
@@ -1135,8 +766,6 @@ function triggerDownload(imgURI) {
   }));
 }
 
-//const btn = document.querySelector('button');
-//btn.addEventListener('click', function () {
 function savePng(){
   const svgNode = container;
   const svgString = (new XMLSerializer()).serializeToString(svgNode);
@@ -1163,15 +792,10 @@ function savePng(){
     const imgURI = canvas
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
-    triggerDownload(imgURI);
+      triggerDownload(imgURI);
   };
+  closeModal();
 }
-
-
-
-
-//let btn = document.querySelector('button')
-//let svg = document.querySelector('svg')
 
 function triggerDownloadSvg(imgURI, fileName){
     let a = document.createElement('a')
@@ -1185,35 +809,47 @@ function saveSvg(){
     let data = (new XMLSerializer()).serializeToString(container)
     let svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'})
     let url = URL.createObjectURL(svgBlob)
-    triggerDownloadSvg(url)
+    triggerDownloadSvg(url);
+    closeModal();
 }
 
-//let btn = document.querySelector('button')
-//btn.addEventListener('click', save)
-
-
 function joinPathsInLayer(layer){
-    //var pathList = [];
     let pathString = "";
     const paths = layer.getElementsByTagName("path");
-    for(var i=0; i<paths.length; i++){
-        //pathList.push(paths[i].getAttribute("d"));
+    for(let i=0; i<paths.length; i++){
         pathString += paths[i].getAttribute("d") + " "
     }
     console.log(paths.length)
-    return pathString.trim();    
+    return pathString.trim();
 }
 
 function copySvgToClipboard(layer){
     const svgStr = joinPathsInLayer(layer);
     navigator.clipboard.writeText(svgStr);
-
 }
 
+// -- Modal ---
+function openModal(sectionDiv) {
+  document.getElementById('modalBackdrop').style.display = 'flex';
+  document.querySelectorAll('.modal-content').forEach(el => {
+    el.classList.add('hidden');
+  });
+  document.getElementById(sectionDiv).classList.remove('hidden');
+}
 
+function closeModal() {
+  document.getElementById('modalBackdrop').style.display = 'none';
+}
 
+function init(){
+  populateLSysMenu();
+  changeTurnAngle(0, false);
+  changeIterations(0, false);
+  changeLineLength(0, false)
+  changeFromMenu(true);
+}
+
+init();
 
 </script>
-
-
 </html>
