@@ -3,20 +3,22 @@
 <head>
 <title>L-System Fractal Generator</title>
 <meta content="width=device-width, initial-scale=1" name="viewport">
-<link rel="icon" sizes="any" href="data:image/svg+xml;charset=UTF-8,%3Csvg%20id%3D%22designSvg%22%20width%3D%2220%22%20height%3D%2220%22%20version%3D%221.1%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%3Cpath%20d%3D%22m3.26%2015%200.962%201.67%200.962-1.67h1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67z%22%20fill%3D%22%23918a6f%22%2F%3E%0A%3C%2Fsvg%3E">
-
+<link rel="icon" sizes="any" href="data:image/svg+xml;charset=UTF-8,%3Csvg%20id%3D%22designSvg%22%20width%3D%2220%22%20height%3D%2220%22%20version%3D%221.1%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%3Cpath%20d%3D%22m3.26%2015%200.962%201.67%200.962-1.67h1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67z%22%20fill%3D%22%232e3d4d%22%2F%3E%0A%3C%2Fsvg%3E">
 <style>
-body{font-family:sans-serif; font-size: 13px; padding:0px; margin:0px; background-color:#7f9fbd;}
-button{ background-color: #2a577c; border:none; color:white; text-decoration:none; display:inline-block; cursor:pointer; border-radius: 4px; height: 25px; overflow: hidden; margin-bottom: 5px; vertical-align: middle; float: left; margin-right: 4px;}
+body{font-family:sans-serif; font-size: 13px; padding:0px; margin:0px; background-color:#8ea3b1;}
+button{ background: #72899d; border:none; color:white; text-decoration:none; display:inline-block; cursor:pointer; border-radius: 4px; height: 25px; overflow: hidden; margin: 0px 5px 5px 5px; vertical-align: middle; float: left; margin-right: 4px;}
+button:hover{background: #7f94a6}
 label{ display: inline-block; float: left; padding: 4px 4px 0px 0px;}
-select{ padding: 3px; display: inline-block; float: left; border-radius: 4px;}
-input[type="range"] {accent-color:#42769f; float:left;}
+select, input[type="number"]{ padding: 3px; display: inline-block; float: left; border-radius: 4px;}
+input[type="range"] {accent-color:#72899d; float:left; margin-top:5px;}
+input[type="number"] {padding: 3px; width:40px; border-radius: 4px; border:none; margin: 3px 0px 0px 5px; float:left;}
 .main{margin-top: 36px;}
-.top-panel { position: fixed; left: 0; top: 0; width: 100%; background-color: #4b5c6e; z-index: 10; color: #f1f1f1; padding-top: 5px;}
+.top-panel { position: fixed; left: 0; top: 0; width: 100%; background-color: #2e3d4d; z-index: 10; color: #f1f1f1; padding: 10px 0px 10px 0px;}
 .top-panel div { float: left;}
+.label{margin:5px 5px 0px 5px;}
 .number-text{background-color: #f1f1f1; padding:5px 7px 5px 7px; color: #000;}
 .minus-btn{border-radius:3px 0px 0px 3px; margin: 0px}
-.plus-btn{border-radius:0px 3px 3px 0px;}
+.plus-btn{border-radius:0px 3px 3px 0px; margin-left: 0px}
 /* --- Modal --- */
 .modal-backdrop {position: fixed;  top: 0;  left: 0;  width: 100vw;  height: 100vh;  background: #00000060;  display: none;  align-items: center;  justify-content: center;  z-index: 1000;}
 .modal {  background: #f1f1f1;  padding: 1.5rem;  border-radius: 10px;  max-width: 510px;  width: 90%;  box-shadow: 0 10px 30px #00000030;  position: relative;  color: #111111;}
@@ -30,6 +32,7 @@ input[type="range"] {accent-color:#42769f; float:left;}
 @media print { 
   .top-panel{ display: none !important; }
 }
+.color-picker {-webkit-appearance: none; -moz-appearance: none; appearance: none; width: 30px; height: 30px; background-color: transparent; border: none; cursor: pointer; border-radius: 4px; float:left;}
 </style>
 </head>
 
@@ -50,24 +53,31 @@ input[type="range"] {accent-color:#42769f; float:left;}
     <label style="margin-left:10px" for="lsysMenu">Type</label>
     <select id="lsysMenu" onchange="changeFromMenu(true)"></select>
     <button onclick="openModal('modalSave')">Save</button>    
-    <input id="colourPicker1" type="color" value="#000000" />
-    <input id="colourPicker2" type="color" value="#ffffff" />
-    <button onclick="copySvgToClipboard(layer1)">Copy to Clipboard</button>
+
+    
     <div class="label">Zoom</div>
     <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" />
-    <div id="zoomText" class="range-label">100%</div>
-    <div class="label">Outline Inside</div>
-    <input id="outlineInsideRange" type="range" min="0" max="10" value="2" class="range" oninput="changeOutlineInside(this.value)" />
-    <div id="outlineInsideText" class="range-label">2</div>
-    <div class="label">Outline</div>
-    <input id="outlineRange" type="range" min="0" max="10" value="2" class="range" oninput="changeOutline(this.value)" />
-    <div id="outlineText" class="range-label">2</div>
+    <div id="zoomText" class="range-label label">100%</div>
+   
+    <div class="label">Inner Line</div>
+    <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" >
+    <div class="label">Outer Line</div>
+    <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" >
+
+    <div class="label">Line Width</div>
+    <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" >
+ 
+    <div class="label">Line Color</div>
+    <input type="color" class="color-picker" value="#000000" oninput="changeLineColor(this.value)" />
+    <div class="label">Background Color</div>
+    <input type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />
+    
+    
   </div>
 <div id="main" class="main">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" id="designSvg" height="1080" width="1080">
         <g id="layer0"><rect id="background" width="1080" height="1080" fill="#ffffff" /></g>
         <g id="layer1"></g>
-        <g id="layer2"></g>
     </svg>
     <style>svg { background-color: rgba(255, 255, 255, 1); }</style>
     <div><canvas id="svgCanvas"></canvas></div>
@@ -91,7 +101,8 @@ input[type="range"] {accent-color:#42769f; float:left;}
       <div>
         <div id="lastSavedText" class="dom-el"></div>
         <button onclick="savePng()">Save PNG</button>
-        <button onclick="saveSvg()">Save SVG</button>        
+        <button onclick="saveSvg()">Save SVG</button>  
+        <button onclick="copySvgToClipboard(layer1)">Copy to Clipboard</button>      
       </div>
     </div>
 <!--
@@ -121,8 +132,6 @@ const svgns = "http://www.w3.org/2000/svg";
 const container = document.getElementById('designSvg');
 const layer1 = document.getElementById('layer1');
 const lsysMenu = document.getElementById('lsysMenu');
-const colourPicker1 = document.getElementById('colourPicker1');
-const colourPicker2 = document.getElementById('colourPicker2');
 const modal = document.getElementById('myModal');
 
 let center = {x:540, y:540};
@@ -140,11 +149,16 @@ let branchColours = ["#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#12345
 let designMin = {};
 let designMax = {};
 
-const app = new function () {
-  this.penDown = true;
-  this.branchList = [];
-  this.branchIndex = 0;
-  this.recursiveBranchDepthIndex = 0;
+const app = {
+  penDown: true,
+  branchList: [],
+  branchIndex: 0,
+  recursiveBranchDepthIndex: 0,
+  outlineInnerDistance: 0,
+  outlineOuterDistance: 0,
+  lineColor: '#333333',
+  backgroundColor: '#f1f1f1',
+  lineWidth: 1,
 }
 
 // L-Systems written by Paul Bourke, Chris Wallace, Hasan Hosam
@@ -377,19 +391,36 @@ const lSystemData = [
   }
 ];
 
-function changeOutlineInside(){
-  changeFromMenu(true)
+function changeLineColor(color){
+  app.lineColor = color;
+  changeFromMenu(true);
 }
 
-function changeOutline(){
-  changeFromMenu(true)
+function changeBackgroundColor(color){
+  app.backgroundColor = color;
+  changeFromMenu(true);
 }
+
+function changeOutlineInside(distance){
+  app.outlineInnerDistance = distance;
+  changeFromMenu(true);
+}
+
+function changeOutlineOuter(distance){
+  app.outlineOuterDistance = distance;
+  changeFromMenu(true);
+}
+
+function changeLineWidth(width){
+  app.lineWidth = width;
+  changeFromMenu(true);
+}
+
 
 function changeZoomRange(zoom){
-  zoomText.innerHTML = zoom;
+  zoomText.textContent = zoom + '%';
   const newSize = Math.floor((100/zoom)*1080);
   container.setAttribute("viewBox", "0 0 " + newSize + " " + newSize);
-  updateCrop();
   saveLocalStorage();
 }
 
@@ -539,7 +570,7 @@ function getPosition(str){
             nextPosition = rotateAroundPoint(currentPosition, startAngle, lineLen);
             nextPosition.command = "S";
             if(lSys.branching){
-                createPath([currentPosition,nextPosition], "rgba(0,0,0,0.05)", branchColours[app.branchIndex], 1, 0, 0);
+                createPath([currentPosition,nextPosition], app.lineColor, branchColours[app.branchIndex], app.lineWidth, 0, 0);
             }
         }else{
             nextPosition = currentPosition;
@@ -575,49 +606,51 @@ function transformPoint(pos){
 }
 
 function drawFromList(iterationList){
-    resetMinMax();
-    startAngle = lSys.startAngle;
-    app.branchList[0] = new Branch(currentPosition, lSys.startAngle);
-    for(let i=0; i<iterationList.length; i++){
-        let ruleLetter = iterationList[i];
-        getPosition(ruleLetter);
-        if((currentPosition != nextPosition) || (nextPosition.command == "M" & app.penDown)){ // & app.penDown
-            minMaxer(nextPosition)
-            posList.push(nextPosition);
-        }
+  resetMinMax();
+  startAngle = lSys.startAngle;
+  app.branchList[0] = new Branch(currentPosition, lSys.startAngle);
+  for(let i=0; i<iterationList.length; i++){
+      let ruleLetter = iterationList[i];
+      getPosition(ruleLetter);
+      if((currentPosition != nextPosition) || (nextPosition.command == "M" & app.penDown)){ // & app.penDown
+          minMaxer(nextPosition)
+          posList.push(nextPosition);
+      }
 
+  }
+
+  let adjustx =  designMin.x + ((designMax.x - designMin.x) * 0.5);
+  let adjusty =  designMin.y + ((designMax.y - designMin.y) * 0.5);
+  let adjx = center.x - adjustx;
+  let adjy = center.y - adjusty;
+
+  if(app.outlineInnerDistance!=0){
+    outline = outlinePoints(posList, true, app.outlineInnerDistance, true);
+    createPath(outline, "rgba(0,0,0,0.1)", app.lineColor, app.lineWidth, adjx, adjy);
+  }
+  
+  //createCircle("x", {x:adjustx, y:adjusty}, 4, "#00ff00", "#00ff00", 0)
+  if(!lSys.branching){
+    document.getElementById("background").setAttribute("fill", app.backgroundColor);
+    let print = false;
+    if(print){
+        createPath(posList, "rgba(0,0,0,0.0)", "#000", 4, adjx, adjy);
+        createPath(posList, "rgba(0,0,0,0.0)", "#fff", 3, adjx, adjy);
+    }else{
+        createPath(posList, "rgba(0,0,0,0.1)", app.lineColor, app.lineWidth, adjx, adjy);
     }
-
-    let adjustx =  designMin.x + ((designMax.x - designMin.x) * 0.5);
-    let adjusty =  designMin.y + ((designMax.y - designMin.y) * 0.5);
-    let adjx = center.x - adjustx;
-    let adjy = center.y - adjusty;
-
-
-    outline = outlinePoints(posList, true, outlineInsideRange.value, true);
-    
-    //createPath(outline, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
-    //createCircle("x", {x:adjustx, y:adjusty}, 4, "#00ff00", "#00ff00", 0)
-    if(!lSys.branching){
-        let col1 = colourPicker1.value
-        let col2 = colourPicker2.value
-        document.getElementById("background").setAttribute("fill", col2);
-        let print = false;
-        if(print){
-            createPath(posList, "rgba(0,0,0,0.0)", "#000", 4, adjx, adjy);
-            createPath(posList, "rgba(0,0,0,0.0)", "#fff", 3, adjx, adjy);
-        }else{
-            createPath(posList, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
-        }
-    }
+  }
+  
+  if(app.outlineOuterDistance!=0){
     //createCircle("x", {x:600, y:600}, 4, "#00ff00", "#00ff00", 0)
-    outline = outlinePoints(posList, false, outlineRange.value, true)
-    //createPath(outline, "rgba(0,0,0,0.1)", "#222", 1, adjx, adjy);
+    outline = outlinePoints(posList, false, app.outlineOuterDistance, true)
+    createPath(outline, "rgba(0,0,0,0.1)", app.lineColor, app.lineWidth, adjx, adjy);
+  }
 }
 
 function create(){
-    let iterationList = getIterationList();
-    drawFromList(iterationList);
+  let iterationList = getIterationList();
+  drawFromList(iterationList);
 }
 
 function clamp(min, max, val, original){
@@ -628,17 +661,17 @@ function clamp(min, max, val, original){
 }
 
 function changeIterations(val, update){
-    val = clamp(0, 20, val ,iterations);
-    iterations += val;
-    document.getElementById("iterationsText").innerHTML = iterations;
-    changeFromMenu(update);
+  val = clamp(0, 20, val ,iterations);
+  iterations += val;
+  document.getElementById("iterationsText").innerHTML = iterations;
+  changeFromMenu(update);
 }
 
 function changeLineLength(val, update){
-    val = clamp(1, 50, val ,lineLength);
-    lineLength += val;
-    document.getElementById("lineLengthText").innerHTML = lineLength;
-    changeFromMenu(update);
+  val = clamp(1, 50, val ,lineLength);
+  lineLength += val;
+  document.getElementById("lineLengthText").innerHTML = lineLength;
+  changeFromMenu(update);
 }
 
 function changeTurnAngle(val, update){
