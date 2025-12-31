@@ -9,9 +9,9 @@ body{font-family:sans-serif; font-size: 13px; padding:0px; margin:0px; backgroun
 button{ background: #72899d; border:none; color:white; text-decoration:none; display:inline-block; cursor:pointer; border-radius: 4px; height: 25px; overflow: hidden; margin: 0px 5px 5px 5px; vertical-align: middle; float: left; margin-right: 4px;}
 button:hover{background: #7f94a6}
 label{ display: inline-block; float: left; padding: 4px 4px 0px 0px;}
-select, input[type="number"]{ padding: 3px; display: inline-block; float: left; border-radius: 4px;}
+select, input[type="number"]{ border:none; padding: 4px; display: inline-block; float: left; border-radius: 4px;}
 input[type="range"] {accent-color:#72899d; float:left; margin-top:5px;}
-input[type="number"] {padding: 3px; width:40px; border-radius: 4px; border:none; margin: 3px 0px 0px 5px; float:left;}
+input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none; margin: 3px 0px 0px 5px; float:left;}
 .main{margin-top: 36px;}
 .top-panel { position: fixed; left: 0; top: 0; width: 100%; background-color: #2e3d4d; z-index: 10; color: #f1f1f1; padding: 10px 0px 10px 0px;}
 .top-panel div { float: left;}
@@ -32,7 +32,9 @@ input[type="number"] {padding: 3px; width:40px; border-radius: 4px; border:none;
 @media print { 
   .top-panel{ display: none !important; }
 }
-.color-picker {-webkit-appearance: none; -moz-appearance: none; appearance: none; width: 30px; height: 30px; background-color: transparent; border: none; cursor: pointer; border-radius: 4px; float:left;}
+.color-picker {display:none;}
+.color-swatch{border-radius: 50%; width: 20px; height:20px; background: #333333; float:left; margin-top:2px; cursor:pointer; border: 2px solid #ffffff22}
+.background-color-swatch{background: #f1f1f1;}
 </style>
 </head>
 
@@ -52,27 +54,27 @@ input[type="number"] {padding: 3px; width:40px; border-radius: 4px; border:none;
     <button class="plus-btn blue" onclick="changeTurnAngle(1, true)">+</button>
     <label style="margin-left:10px" for="lsysMenu">Type</label>
     <select id="lsysMenu" onchange="changeFromMenu(true)"></select>
-    <button onclick="openModal('modalSave')">Save</button>    
-
-    
+    <button onclick="openModal('modalSave')">Save</button>        
     <div class="label">Zoom</div>
     <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" />
-    <div id="zoomText" class="range-label label">100%</div>
-   
+    <div id="zoomText" class="range-label label">100%</div>   
     <div class="label">Inner Line</div>
     <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" >
     <div class="label">Outer Line</div>
     <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" >
-
     <div class="label">Line Width</div>
-    <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" >
- 
+    <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" > 
     <div class="label">Line Color</div>
-    <input type="color" class="color-picker" value="#000000" oninput="changeLineColor(this.value)" />
+    <input id="lineColorInput" type="color" class="color-picker" value="#000000" oninput="changeLineColor(this.value)" />
+    <div id="lineColorSwatch" class="color-swatch" onclick="document.getElementById('lineColorInput').click()"></div>
     <div class="label">Background Color</div>
-    <input type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />
+    <input id="backgroundColorInput" type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />   
+    <div id="backgroundColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('backgroundColorInput').click()"></div> 
     
     
+    
+    
+      
   </div>
 <div id="main" class="main">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" id="designSvg" height="1080" width="1080">
@@ -133,6 +135,9 @@ const container = document.getElementById('designSvg');
 const layer1 = document.getElementById('layer1');
 const lsysMenu = document.getElementById('lsysMenu');
 const modal = document.getElementById('myModal');
+const backgroundColorInput = document.getElementById('backgroundColorInput');
+const lineColorSwatch = document.getElementById('lineColorSwatch');
+const backgroundColorSwatch = document.getElementById('backgroundColorSwatch');
 
 let center = {x:540, y:540};
 let lineLength = 10;
@@ -393,11 +398,13 @@ const lSystemData = [
 
 function changeLineColor(color){
   app.lineColor = color;
+  lineColorSwatch.style.background = color;
   changeFromMenu(true);
 }
 
 function changeBackgroundColor(color){
   app.backgroundColor = color;
+  backgroundColorSwatch.style.background = color;
   changeFromMenu(true);
 }
 
@@ -786,7 +793,7 @@ function outlinePoints(pointListSrc, outside, width, closed){
 //save image
 function triggerDownload(imgURI) {
   const a = document.createElement('a');
-  a.download = 'line_volume_svg.png'; // filename
+  a.download = 'l-system-fractal.png'; // filename
   a.target = '_blank';
   a.href = imgURI;
   // trigger download button
@@ -832,7 +839,7 @@ function savePng(){
 
 function triggerDownloadSvg(imgURI, fileName){
     let a = document.createElement('a')
-    a.setAttribute('download', 'line_volume.svg')
+    a.setAttribute('download', 'l-system-fractal.svg')
     a.setAttribute('href', imgURI)
     a.setAttribute('target', '_blank')
     a.click()
