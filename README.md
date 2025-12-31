@@ -2,6 +2,8 @@ L-System Fractal Generator
 
 Try it here: https://zr3d.github.io/l-system-generator/
 
+To install download the index.html file and open in your browser, alternatively download the project via the "<> Code" Button, unzip the project folder and then open the index.html file in your default browser.
+
 Outputs as SVG and PNG
 
 L-System Types
