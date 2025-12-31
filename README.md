@@ -26,3 +26,7 @@ Pentaplexity,
 Hexagonal Gosper, 
 Levy Curve
 
+Image of a Square Sierpinski created with the L-System Fractal Generator
+
+<img width="620" height="620" alt="github" src="https://github.com/user-attachments/assets/0f5fcc1b-a958-4fe3-9efd-c7a1e787203b" />
+
