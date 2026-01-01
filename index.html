@@ -5,20 +5,14 @@
 <meta content="width=device-width, initial-scale=1" name="viewport">
 <link rel="icon" sizes="any" href="data:image/svg+xml;charset=UTF-8,%3Csvg%20id%3D%22designSvg%22%20width%3D%2220%22%20height%3D%2220%22%20version%3D%221.1%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%3Cpath%20d%3D%22m3.26%2015%200.962%201.67%200.962-1.67h1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67z%22%20fill%3D%22%232e3d4d%22%2F%3E%0A%3C%2Fsvg%3E">
 <style>
+*{box-sizing:border-box;}
 body{font-family:sans-serif; font-size: 13px; padding:0px; margin:0px; background-color:#8ea3b1;}
-button{ background: #72899d; border:none; color:white; text-decoration:none; display:inline-block; cursor:pointer; border-radius: 4px; height: 25px; overflow: hidden; margin: 0px 5px 5px 5px; vertical-align: middle; float: left; margin-right: 4px;}
-button:hover{background: #7f94a6}
-label{ display: inline-block; float: left; padding: 4px 4px 0px 0px;}
-select, input[type="number"]{ border:none; padding: 4px; display: inline-block; float: left; border-radius: 4px;}
-input[type="range"] {accent-color:#72899d; float:left; margin-top:5px;}
-input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none; margin: 3px 0px 0px 5px; float:left;}
-.main{margin-top: 36px;}
-.top-panel { position: fixed; left: 0; top: 0; width: 100%; background-color: #2e3d4d; z-index: 10; color: #f1f1f1; padding: 10px 0px 10px 0px;}
-.top-panel div { float: left;}
-.label{margin:5px 5px 0px 5px;}
-.number-text{background-color: #f1f1f1; padding:5px 7px 5px 7px; color: #000;}
-.minus-btn{border-radius:3px 0px 0px 3px; margin: 0px}
-.plus-btn{border-radius:0px 3px 3px 0px; margin-left: 0px}
+button{ background: #72899d; border:none; color:white; text-decoration:none; display:inline-block; cursor:pointer; border-radius: 4px; height: 25px; overflow: hidden; margin: 0px 5px 0px 5px; vertical-align: middle; margin-right: 4px;}
+button:hover{background: #7f94a6;}
+select, input[type="number"]{ border:none; padding: 4px; border-radius: 4px;}
+input[type="range"] {accent-color:#72899d;  margin-top:5px;}
+input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none; margin: 3px 0px 0px 5px;}
+.main{margin-top: 50px;}
 /* --- Modal --- */
 .modal-backdrop {position: fixed;  top: 0;  left: 0;  width: 100vw;  height: 100vh;  background: #00000060;  display: none;  align-items: center;  justify-content: center;  z-index: 1000;}
 .modal {  background: #f1f1f1;  padding: 1.5rem;  border-radius: 10px;  max-width: 510px;  width: 90%;  box-shadow: 0 10px 30px #00000030;  position: relative;  color: #111111;}
@@ -27,54 +21,127 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
 .modal .close:hover {  color: #000000;}
 .modal-heading { font-size: 1.2rem;}
 .modal-content div{ margin: 0.6rem 0rem;}
-.modal-content .modal-block{display: inline-block; margin: 1rem;}
+.modal-content .modal-block{ margin: 1rem;}
 .hidden{display: none}
 @media print { 
   .top-panel{ display: none !important; }
 }
+/* --- Top Panel --- */
+/*
+.top-panel {display:flex; position: fixed; left: 0; top: 0; width: 100%; background-color: #2e3d4d; z-index: 10; color: #f1f1f1; padding: 10px 0px 10px 0px; align-items: center;}
+*/
+.top-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: grid;
+  
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background-color: #2e3d4d;
+  z-index: 10;
+  color: #f1f1f1;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.top-panel .number-spinner-group{display:flex;}
+.number-spinner-group div{flex:1}
+.number-spinner-group .number-text{flex:0 0 30px;}
+.color-swatch{border-radius: 50%; width: 20px; height:20px; background: #333333; margin-top:2px; cursor:pointer; border: 2px solid #ffffff22;}
+.color-swatch:hover{opacity:0.9}
 .color-picker {display:none;}
-.color-swatch{border-radius: 50%; width: 20px; height:20px; background: #333333; float:left; margin-top:2px; cursor:pointer; border: 2px solid #ffffff22}
-.background-color-swatch{background: #f1f1f1;}
+.label{ text-align:right}
+.number-text{background-color: #f1f1f1; padding:5px 7px 5px 7px; color: #000; height: 25px; margin:0px;}
+.minus-btn{border-radius:3px 0px 0px 3px; margin: 0px;}
+.plus-btn{border-radius:0px 3px 3px 0px; margin-left: 0px;}
+
+@media (max-width: 480px) {
+  .top-panel {
+    grid-template-columns: auto auto;
+    gap: 6px 8px;
+  }
+  
+
+  .label {
+    width: 75px;
+    font-size: 12px;
+  }
+}
+
 </style>
 </head>
 
 <body>
   <div id="topPanel" class="top-panel">
-    <label style="margin-left:10px" for="iterationsText">Iterations</label>
-    <button class="minus-btn blue" onclick="changeIterations(-1, true)">-</button>
-    <div class="number-text" id="iterationsText">0</div>
-    <button class="plus-btn blue" onclick="changeIterations(1, true)">+</button>
-    <label style="margin-left:10px" for="lineLengthText">Line Length</label>
-    <button class="minus-btn blue" onclick="changeLineLength(-1, true)">-</button>
-    <div class="number-text" id="lineLengthText">0</div>
-    <button class="plus-btn blue" onclick="changeLineLength(1, true)">+</button>
-    <label style="margin-left:10px" for="turnAngleText">Turn Angle</label>
-    <button class="minus-btn blue" onclick="changeTurnAngle(-1, true)">-</button>
-    <div class="number-text" id="turnAngleText">0</div>
-    <button class="plus-btn blue" onclick="changeTurnAngle(1, true)">+</button>
-    <label style="margin-left:10px" for="lsysMenu">Type</label>
-    <select id="lsysMenu" onchange="changeFromMenu(true)"></select>
-    <button onclick="openModal('modalSave')">Save</button>        
-    <div class="label">Zoom</div>
-    <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" />
-    <div id="zoomText" class="range-label label">100%</div>   
-    <div class="label">Inner Line</div>
-    <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" >
-    <div class="label">Outer Line</div>
-    <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" >
-    <div class="label">Line Width</div>
-    <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" > 
-    <div class="label">Line Color</div>
-    <input id="lineColorInput" type="color" class="color-picker" value="#000000" oninput="changeLineColor(this.value)" />
-    <div id="lineColorSwatch" class="color-swatch" onclick="document.getElementById('lineColorInput').click()"></div>
-    <div class="label">Background Color</div>
-    <input id="backgroundColorInput" type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />   
-    <div id="backgroundColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('backgroundColorInput').click()"></div> 
-    
-    
-    
-    
-      
+    <div class="control">   
+      <div class="label">Iterations</div>
+      <div class="number-spinner-group">
+        <button class="minus-btn blue" onclick="changeIterations(-1, true)">-</button>
+        <div class="number-text" id="iterationsText">0</div>    
+        <button class="plus-btn blue" onclick="changeIterations(1, true)">+</button>
+      </div>
+    </div>
+    <div class="control">    
+      <div class="label">Line Length</div>
+      <div class="number-spinner-group">
+        <button class="minus-btn blue" onclick="changeLineLength(-1, true)">-</button>
+        <div class="number-text" id="lineLengthText">0</div>
+        <button class="plus-btn blue" onclick="changeLineLength(1, true)">+</button>
+      </div>    
+    </div>
+    <div class="control">    
+      <div class="label">Turn Angle</div>
+      <div class="number-spinner-group">
+        <button class="minus-btn blue" onclick="changeTurnAngle(-1, true)">-</button>
+        <div class="number-text" id="turnAngleText">0</div>
+        <button class="plus-btn blue" onclick="changeTurnAngle(1, true)">+</button>
+      </div>
+    </div>
+    <div class="control">   
+      <div class="label">Type</div>
+      <select id="lsysMenu" onchange="changeFromMenu(true)"></select>    
+    </div>
+    <div class="control"> 
+      <div class="label">Save As</div>
+      <button onclick="openModal('modalSave')">Save</button>
+    </div>  
+    <div class="control"> 
+      <div id="zoomText" class="label">Zoom 100%</div>
+      <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" /> 
+    </div>
+    <div class="control">     
+      <div class="label">Inner Line</div>
+      <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" >
+    </div>
+    <div class="control"> 
+      <div class="label">Outer Line</div>
+      <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" >
+    </div>
+    <div class="control"> 
+      <div class="label">Line Width</div>
+      <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" > 
+    </div>
+    <div class="control"> 
+      <div class="label">Line</div>
+      <input id="lineColorInput" type="color" class="color-picker" value="#000000" oninput="changeLineColor(this.value)" />
+      <div id="lineColorSwatch" class="color-swatch" onclick="document.getElementById('lineColorInput').click()"></div>
+    </div>
+    <div class="control"> 
+      <div class="label">Background</div>
+      <input id="backgroundColorInput" type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />   
+      <div id="backgroundColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('backgroundColorInput').click()"></div> 
+    </div>
   </div>
 <div id="main" class="main">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" id="designSvg" height="1080" width="1080">
@@ -89,15 +156,6 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
   <div class="modal">
     <span class="close" onclick="closeModal()" id="closeModalButton">&times;</span>
 
-    <div id="modalAddDrawing" class="modal-content">
-      <h2>Add Drawing</h2>
-      <div>
-        <input id="addNewDrawingInput" class="dom-ctrl" type="text" placeholder="Type drawing title here...">
-        <button onclick="addDrawing(false)">Add New Drawing</button>
-        <button onclick="addDrawing(true)">Save As New</button>
-      </div>
-    </div>
-
     <div id="modalSave" class="modal-content">
       <h2>Save As</h2>
       <div>
@@ -107,27 +165,10 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
         <button onclick="copySvgToClipboard(layer1)">Copy to Clipboard</button>      
       </div>
     </div>
-<!--
-    <div id="modalRenameDrawing" class="modal-content">
-      <h2>Rename Drawing</h2>
-      <div>
-        <input id="drawingTitleInput" class="dom-ctrl" type="text" placeholder="Type drawing title here...">
-        <button onclick="renameDrawing()">Rename Drawing</button>
-      </div>
-    </div>
--->
-    <div id="modalSaveSettings" class="modal-content">
-      <h2>Save Setting</h2>
-      <div>
-        <input id="saveSettingsInput" class="dom-ctrl" type="text" placeholder="Type settings title here...">
-        <button onclick="saveSettings()">Save Setting</button>
-      </div>
-    </div>
     </div>
 </div>
-
-
 </body>
+
 <script>
 // --- Global Declarations ---
 const svgns = "http://www.w3.org/2000/svg";
@@ -331,7 +372,7 @@ const lSystemData = [
     tags: ["koch", "polygonal", "variant"]
   },
   {
-    title: "Quadratic Koch Island Hosam",
+    title: "Quadratic Koch Hosam",
     axiomStr: "X+X+X+X+X+X+X+X",
     ruleSets: [
       "X+YF++YF-FX--FXFX-YF+X",
@@ -425,10 +466,9 @@ function changeLineWidth(width){
 
 
 function changeZoomRange(zoom){
-  zoomText.textContent = zoom + '%';
+  zoomText.textContent = `Zoom ${zoom}%`;
   const newSize = Math.floor((100/zoom)*1080);
   container.setAttribute("viewBox", "0 0 " + newSize + " " + newSize);
-  saveLocalStorage();
 }
 
 function rotateAroundPoint(centerOfRotation, degrees, length){
