@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <title>L-System Fractal Generator</title>
-<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" sizes="any" href="data:image/svg+xml;charset=UTF-8,%3Csvg%20id%3D%22designSvg%22%20width%3D%2220%22%20height%3D%2220%22%20version%3D%221.1%22%20viewBox%3D%220%200%2020%2020%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%3Cpath%20d%3D%22m3.26%2015%200.962%201.67%200.962-1.67h1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h1.92l0.962%201.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67%200.962-1.67h1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l-0.962-1.67%200.962-1.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h-1.92l-0.962-1.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67h1.92l0.962%201.67-0.962%201.67h-1.92l0.962%201.67-0.962%201.67z%22%20fill%3D%22%232e3d4d%22%2F%3E%0A%3C%2Fsvg%3E">
 <style>
 *{box-sizing:border-box;}
@@ -27,25 +27,20 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
   .top-panel{ display: none !important; }
 }
 /* --- Top Panel --- */
-/*
-.top-panel {display:flex; position: fixed; left: 0; top: 0; width: 100%; background-color: #2e3d4d; z-index: 10; color: #f1f1f1; padding: 10px 0px 10px 0px; align-items: center;}
-*/
+
 .top-panel {
+  display: flex;
   position: fixed;
-  top: 0;
   left: 0;
+  top: 0;
   width: 100%;
-  display: grid;
-  
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
   background-color: #2e3d4d;
   z-index: 10;
   color: #f1f1f1;
+  padding: 8px 12px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .control {
@@ -68,14 +63,10 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
 
 @media (max-width: 480px) {
   .top-panel {
-    grid-template-columns: auto auto;
     gap: 6px 8px;
   }
-  
-
   .label {
     width: 75px;
-    font-size: 12px;
   }
 }
 
