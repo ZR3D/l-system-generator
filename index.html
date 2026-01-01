@@ -113,11 +113,11 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
     </div>
     <div class="control">     
       <div class="label">Inner Line</div>
-      <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" >
+      <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" min="0">
     </div>
     <div class="control"> 
       <div class="label">Outer Line</div>
-      <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" >
+      <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" min="0" >
     </div>
     <div class="control"> 
       <div class="label">Line Width</div>
@@ -133,6 +133,11 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
       <input id="backgroundColorInput" type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />   
       <div id="backgroundColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('backgroundColorInput').click()"></div> 
     </div>
+    <div class="control"> 
+      <div class="label">Fill</div>
+      <input id="fillColorInput" type="color" class="color-picker" value="#333333" oninput="changeFillColor(this.value)" />   
+      <div id="fillColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('fillColorInput').click()"></div> 
+    </div>
   </div>
 <div id="main" class="main">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" id="designSvg" height="1080" width="1080">
@@ -146,7 +151,6 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <span class="close" onclick="closeModal()" id="closeModalButton">&times;</span>
-
     <div id="modalSave" class="modal-content">
       <h2>Save As</h2>
       <div>
@@ -180,7 +184,7 @@ let convertList = ["X", "Y"];
 let iterations = 3;
 let turnAngle = 90;
 let scaleFactor = 0.6;
-let lSys = {};
+let currentLSystem = {};
 let branchAngle = 90;
 let branchColours = ["#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612","#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612"];
 let designMin = {};
@@ -193,6 +197,7 @@ const app = {
   recursiveBranchDepthIndex: 0,
   outlineInnerDistance: 0,
   outlineOuterDistance: 0,
+  fillColor: '#333333',
   lineColor: '#333333',
   backgroundColor: '#f1f1f1',
   lineWidth: 1,
@@ -541,6 +546,12 @@ function changeBackgroundColor(color){
   changeFromMenu(true);
 }
 
+function changeFillColor(color){
+  app.fillColor = color;
+  fillColorSwatch.style.background = color;
+  changeFromMenu(true);
+}
+
 function changeOutlineInside(distance){
   app.outlineInnerDistance = distance;
   changeFromMenu(true);
@@ -580,6 +591,7 @@ function createCircle(id, pos, r, stroke, fill, strokeWidth){
 }
 
 function createPath(posList, fill, stroke, strokeWidth, adjx, adjy){
+    fill += '20';
     let path = document.createElementNS(svgns, 'path');
     let d = "M" + (posList[0].x + adjx) + " " + (posList[0].y + adjy);
     //d += "A 1300 1300 0 0 1 "+ posList[1].x + " " + posList[1].y;
@@ -606,12 +618,12 @@ function lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertL
 }
 
 function changelSystem(title){
-  if(title != lSys.title){ //change only if system is different
+  if(title != currentLSystem.title){ //change only if system is different
     iterations = 3;
     changeIterations(0, false)
     let index = lSystemData.findIndex(x => x.title === title);
-    lSys = lSystemData[index];
-    turnAngle = lSys.turningAngle;
+    currentLSystem = lSystemData[index];
+    turnAngle = currentLSystem.turningAngle;
     changeTurnAngle(0, false);
   }
 }
@@ -635,8 +647,8 @@ function changeFromMenu(update){
 
 function iterate(axiomStr, axiomLetters, ruleSetsruleSets){
   let iterationStr = axiomStr;
-  for(let i=0; i<lSys.axiomLetters.length; i++){
-      let ruleSet = lSys.ruleSets[i].toLowerCase();
+  for(let i=0; i<currentLSystem.axiomLetters.length; i++){
+      let ruleSet = currentLSystem.ruleSets[i].toLowerCase();
       iterationStr = replaceGlobally(iterationStr, axiomLetters[i], ruleSet);
   }
   iterationStr = iterationStr.replace(/ +(?= )/g,'');
@@ -649,9 +661,9 @@ function replaceGlobally(original, searchTxt, replaceTxt){
 }
 
 function getIterationList(){
-  let iterationString = lSys.axiomStr;
+  let iterationString = currentLSystem.axiomStr;
   for(let i=0; i<iterations; i++){
-      iterationString = iterate(iterationString,lSys.axiomLetters, lSys.ruleSets);
+      iterationString = iterate(iterationString, currentLSystem.axiomLetters, currentLSystem.ruleSets);
   }
   iterationString = iterationString.replace(/\s/g, ""); //remove whitespace
   return iterationString.split("");
@@ -684,12 +696,11 @@ function Branch(pos, angle){
 function getPosition(str){
     currentPosition = nextPosition;
     //convert X,Y to F
-    for(let i=0; i<lSys.convertList.length; i++){
-        str = str.replace(lSys.convertList[i], "F");
+    for(let i=0; i<currentLSystem.convertList.length; i++){
+        str = str.replace(currentLSystem.convertList[i], "F");
     }
     if(str.includes("[")){
         app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
-        //console.log("set: ", lSys.startAngle, currentPosition);
         app.branchIndex++;
         app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
         startAngle = app.branchList[app.branchIndex].angle;
@@ -700,16 +711,14 @@ function getPosition(str){
         startAngle = app.branchList[app.branchIndex].angle;
         currentPosition = app.branchList[app.branchIndex].pos;
         nextPosition = currentPosition;
-        //console.log("reset: ", lSys.startAngle, currentPosition);
     }else{
     startAngle = getAngle(str, startAngle);
         if(str.includes("F")){
-            lineLen = (lSys.branching)? ((lineLength * Math.pow(scaleFactor, app.branchIndex))*20):lineLength
-            //lineLen = (lSys.branching)? (lineLength * branchLength[app.branchIndex]):lineLength
+            lineLen = (currentLSystem.branching)? ((lineLength * Math.pow(scaleFactor, app.branchIndex))*20):lineLength
             nextPosition = rotateAroundPoint(currentPosition, startAngle, lineLen);
             nextPosition.command = "S";
-            if(lSys.branching){
-                createPath([currentPosition,nextPosition], app.lineColor, branchColours[app.branchIndex], app.lineWidth, 0, 0);
+            if(currentLSystem.branching){
+                createPath([currentPosition,nextPosition], app.fillColor, branchColours[app.branchIndex], app.lineWidth, 0, 0);
             }
         }else{
             nextPosition = currentPosition;
@@ -746,8 +755,8 @@ function transformPoint(pos){
 
 function drawFromList(iterationList){
   resetMinMax();
-  startAngle = lSys.startAngle;
-  app.branchList[0] = new Branch(currentPosition, lSys.startAngle);
+  startAngle = currentLSystem.startAngle;
+  app.branchList[0] = new Branch(currentPosition, currentLSystem.startAngle);
   for(let i=0; i<iterationList.length; i++){
       let ruleLetter = iterationList[i];
       getPosition(ruleLetter);
@@ -764,26 +773,26 @@ function drawFromList(iterationList){
   let adjy = center.y - adjusty;
 
   if(app.outlineInnerDistance!=0){
-    outline = outlinePoints(posList, true, app.outlineInnerDistance, true);
-    createPath(outline, "rgba(0,0,0,0.1)", app.lineColor, app.lineWidth, adjx, adjy);
+    outline = outlinePoints(posList, false, app.outlineInnerDistance, true);
+    createPath(outline, app.fillColor, app.lineColor, app.lineWidth, adjx, adjy);
   }
   
   //createCircle("x", {x:adjustx, y:adjusty}, 4, "#00ff00", "#00ff00", 0)
-  if(!lSys.branching){
+  if(!currentLSystem.branching){
     document.getElementById("background").setAttribute("fill", app.backgroundColor);
     let print = false;
     if(print){
-        createPath(posList, "rgba(0,0,0,0.0)", "#000", 4, adjx, adjy);
-        createPath(posList, "rgba(0,0,0,0.0)", "#fff", 3, adjx, adjy);
+        createPath(posList, app.fillColor, "#000", 4, adjx, adjy);
+        createPath(posList, app.fillColor, "#fff", 3, adjx, adjy);
     }else{
-        createPath(posList, "rgba(0,0,0,0.1)", app.lineColor, app.lineWidth, adjx, adjy);
+        createPath(posList, app.fillColor, app.lineColor, app.lineWidth, adjx, adjy);
     }
   }
   
+  
   if(app.outlineOuterDistance!=0){
-    //createCircle("x", {x:600, y:600}, 4, "#00ff00", "#00ff00", 0)
-    outline = outlinePoints(posList, false, app.outlineOuterDistance, true)
-    createPath(outline, "rgba(0,0,0,0.1)", app.lineColor, app.lineWidth, adjx, adjy);
+    outline = outlinePoints(posList, true, app.outlineOuterDistance, true)
+    createPath(outline, app.fillColor, app.lineColor, app.lineWidth, adjx, adjy);
   }
 }
 
