@@ -425,6 +425,107 @@ const lSystemData = [
     startAngle: 0,
     branching: false,
     tags: ["curve", "classic"]
+  },
+  {
+    title: "Moore Curve",
+    axiomStr: "LFL+F+LFL",
+    ruleSets: [
+      "-RF+LFL+FR-",
+      "+LF-RFR-FL+"
+    ],
+    axiomLetters: ["L", "R"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["moore", "space-filling", "classic"]
+  },
+  //From Chatty
+  {
+    title: "Morton Z-Order Curve",
+    axiomStr: "X",
+    ruleSets: ["X+YF+", "-FX-Y"],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["space-filling", "practical", "classic"]
+  },
+
+  {
+    title: "Minkowski Sausage",
+    axiomStr: "F",
+    ruleSets: ["F+F-F-FF+F+F-F"],
+    axiomLetters: ["F"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["curve", "classic", "coastline"]
+  },
+
+  {
+    title: "Cesaro Fractal",
+    axiomStr: "F",
+    ruleSets: ["F+F--F+F"],
+    axiomLetters: ["F"],
+    turningAngle: 85,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["koch", "variant", "decorative"]
+  },
+
+  {
+    title: "Heighway Dragon",
+    axiomStr: "FX",
+    ruleSets: ["X+YF+", "-FX-Y"],
+    axiomLetters: ["X", "Y"],
+    turningAngle: 90,
+    convertList: [],
+    startAngle: 0,
+    branching: false,
+    tags: ["dragon", "curve", "classic"]
+  },
+
+  {
+    title: "Fractal Plant",
+    axiomStr: "X",
+    ruleSets: ["F+[[X]-X]-F[-FX]+X", "FF"],
+    axiomLetters: ["X", "F"],
+    turningAngle: 25,
+    convertList: [],
+    startAngle: -90,
+    branching: true,
+    tags: ["branching", "plant", "classic"]
+  },
+
+  {
+    title: "Anabaena Algae",
+    axiomStr: "A",
+    ruleSets: ["AB", "A"],
+    axiomLetters: ["A", "B"],
+    turningAngle: 0,
+    convertList: ["A", "B"], // ← this is the key
+    startAngle: 0,
+    branching: false,
+    tags: ["biological", "classic", "educational"]
+  },
+
+  {
+    title: "Penrose Tiling Approx.",
+    axiomStr: "[X]++[X]++[X]++[X]++[X]",
+    ruleSets: [
+      "F++F++F+++++F-F++F",
+      "F-F++F+++++F++F++F"
+    ],
+    axiomLetters: ["X", "F"],
+    turningAngle: 36,
+    convertList: [],
+    startAngle: 0,
+    branching: true,
+    tags: ["aperiodic", "tiling", "advanced"]
   }
 ];
 
