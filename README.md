@@ -26,7 +26,8 @@ Quadratic Koch Island Hosam,
 Peano Curve, 
 Pentaplexity, 
 Hexagonal Gosper, 
-Levy Curve
+Levy Curve, 
+Morton Z-Order Curve, Minkowski Sausage, Cesaro Fractal, Heighway Dragon, Fractal Plant, Anabaena Algae, Penrose Tiling Approx.
 
 Image of a Square Sierpinski created with the L-System Fractal Generator
 
