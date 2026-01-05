@@ -12,7 +12,7 @@ button:hover{background: #7f94a6;}
 select, input[type="number"]{ border:none; padding: 4px; border-radius: 4px;}
 input[type="range"] {accent-color:#72899d;  margin-top:5px;}
 input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none; margin: 3px 0px 0px 5px;}
-.main{margin-top: 50px;}
+.main{width:100%; max-width:1080px;}
 /* --- Modal --- */
 .modal-backdrop {position: fixed;  top: 0;  left: 0;  width: 100vw;  height: 100vh;  background: #00000060;  display: none;  align-items: center;  justify-content: center;  z-index: 1000;}
 .modal {  background: #f1f1f1;  padding: 1.5rem;  border-radius: 10px;  max-width: 510px;  width: 90%;  box-shadow: 0 10px 30px #00000030;  position: relative;  color: #111111;}
@@ -23,33 +23,12 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
 .modal-content div{ margin: 0.6rem 0rem;}
 .modal-content .modal-block{ margin: 1rem;}
 .hidden{display: none}
-@media print { 
+@media print {
   .top-panel{ display: none !important; }
 }
 /* --- Top Panel --- */
-
-.top-panel {
-  display: flex;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  background-color: #2e3d4d;
-  z-index: 10;
-  color: #f1f1f1;
-  padding: 8px 12px;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.control {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
+.top-panel { display: flex; left: 0;top: 0;width: 100%;background-color: #2e3d4d;z-index: 10;color: #f1f1f1;padding: 8px 12px;align-items: center;gap: 10px;flex-wrap: wrap;}
+.control { display: inline-flex;  align-items: center;  gap: 4px; white-space: nowrap;}
 .top-panel .number-spinner-group{display:flex;}
 .number-spinner-group div{flex:1}
 .number-spinner-group .number-text{flex:0 0 30px;}
@@ -60,38 +39,32 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
 .number-text{background-color: #f1f1f1; padding:5px 7px 5px 7px; color: #000; height: 25px; margin:0px;}
 .minus-btn{border-radius:3px 0px 0px 3px; margin: 0px;}
 .plus-btn{border-radius:0px 3px 3px 0px; margin-left: 0px;}
-
 @media (max-width: 480px) {
-  .top-panel {
-    gap: 6px 8px;
-  }
-  .label {
-    width: 75px;
-  }
+  .top-panel {gap: 6px 8px;}
+  .label {width: 75px; }
 }
-
 </style>
 </head>
-
 <body>
+  <div class="main">
   <div id="topPanel" class="top-panel">
-    <div class="control">   
+    <div class="control">
       <div class="label">Iterations</div>
       <div class="number-spinner-group">
         <button class="minus-btn blue" onclick="changeIterations(-1, true)">-</button>
-        <div class="number-text" id="iterationsText">0</div>    
+        <div class="number-text" id="iterationsText">0</div>
         <button class="plus-btn blue" onclick="changeIterations(1, true)">+</button>
       </div>
     </div>
-    <div class="control">    
+    <div class="control">
       <div class="label">Line Length</div>
       <div class="number-spinner-group">
         <button class="minus-btn blue" onclick="changeLineLength(-1, true)">-</button>
         <div class="number-text" id="lineLengthText">0</div>
         <button class="plus-btn blue" onclick="changeLineLength(1, true)">+</button>
-      </div>    
+      </div>
     </div>
-    <div class="control">    
+    <div class="control">
       <div class="label">Turn Angle</div>
       <div class="number-spinner-group">
         <button class="minus-btn blue" onclick="changeTurnAngle(-1, true)">-</button>
@@ -99,55 +72,55 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
         <button class="plus-btn blue" onclick="changeTurnAngle(1, true)">+</button>
       </div>
     </div>
-    <div class="control">   
+    <div class="control">
       <div class="label">Type</div>
-      <select id="lsysMenu" onchange="changeFromMenu(true)"></select>    
+      <select id="lSystemSelect" onchange="changeFromMenu(true)"></select>
     </div>
-    <div class="control"> 
+    <div class="control">
       <div class="label">Save As</div>
       <button onclick="openModal('modalSave')">Save</button>
-    </div>  
-    <div class="control"> 
-      <div id="zoomText" class="label">Zoom 100%</div>
-      <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" /> 
     </div>
-    <div class="control">     
+    <div class="control">
+      <div id="zoomText" class="label">Zoom 100%</div>
+      <input id="zoomRange" type="range" min="10" max="200" value="100" class="range" oninput="changeZoomRange(this.value)" />
+    </div>
+    <div class="control">
       <div class="label">Inner Line</div>
       <input type="number" onchange="changeOutlineInside(this.value)" value="0" step="1" min="0">
     </div>
-    <div class="control"> 
+    <div class="control">
       <div class="label">Outer Line</div>
       <input type="number" onchange="changeOutlineOuter(this.value)" value="0" step="1" min="0" >
     </div>
-    <div class="control"> 
+    <div class="control">
       <div class="label">Line Width</div>
-      <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" > 
+      <input type="number" onchange="changeLineWidth(this.value)" value="1" step="1" >
     </div>
-    <div class="control"> 
+    <div class="control">
       <div class="label">Line</div>
       <input id="lineColorInput" type="color" class="color-picker" value="#000000" oninput="changeLineColor(this.value)" />
       <div id="lineColorSwatch" class="color-swatch" onclick="document.getElementById('lineColorInput').click()"></div>
     </div>
-    <div class="control"> 
+    <div class="control">
       <div class="label">Background</div>
-      <input id="backgroundColorInput" type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />   
-      <div id="backgroundColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('backgroundColorInput').click()"></div> 
+      <input id="backgroundColorInput" type="color" class="color-picker" value="#ffffff" oninput="changeBackgroundColor(this.value)" />
+      <div id="backgroundColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('backgroundColorInput').click()"></div>
     </div>
-    <div class="control"> 
+    <div class="control">
       <div class="label">Fill</div>
-      <input id="fillColorInput" type="color" class="color-picker" value="#333333" oninput="changeFillColor(this.value)" />   
-      <div id="fillColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('fillColorInput').click()"></div> 
+      <input id="fillColorInput" type="color" class="color-picker" value="#333333" oninput="changeFillColor(this.value)" />
+      <div id="fillColorSwatch" class="color-swatch background-color-swatch" onclick="document.getElementById('fillColorInput').click()"></div>
     </div>
   </div>
 <div id="main" class="main">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" id="designSvg" height="1080" width="1080">
-        <g id="layer0"><rect id="background" width="1080" height="1080" fill="#ffffff" /></g>
+    <svg id="designSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080"  height="100%" width="100%">
+        <rect id="background" width="100%" height="100%" fill="#ffffff" x='0' y='0'/>
         <g id="layer1"></g>
     </svg>
     <style>svg { background-color: rgba(255, 255, 255, 1); }</style>
     <div><canvas id="svgCanvas"></canvas></div>
 </div>
-
+</div>
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <span class="close" onclick="closeModal()" id="closeModalButton">&times;</span>
@@ -156,25 +129,25 @@ input[type="number"] {padding: 4px; width:40px; border-radius: 4px; border:none;
       <div>
         <div id="lastSavedText" class="dom-el"></div>
         <button onclick="savePng()">Save PNG</button>
-        <button onclick="saveSvg()">Save SVG</button>  
-        <button onclick="copySvgToClipboard(layer1)">Copy to Clipboard</button>      
+        <button onclick="saveSvg()">Save SVG</button>
+        <button onclick="copySvgToClipboard(layer1)">Copy Path to Clipboard</button>
       </div>
     </div>
     </div>
 </div>
-</body>
 
 <script>
 // --- Global Declarations ---
 const svgns = "http://www.w3.org/2000/svg";
-const container = document.getElementById('designSvg');
+const designSvg = document.getElementById('designSvg');
+const background = document.getElementById('background');
+const canvas = document.getElementById('svgCanvas');
 const layer1 = document.getElementById('layer1');
-const lsysMenu = document.getElementById('lsysMenu');
+const lSystemSelect = document.getElementById('lSystemSelect');
 const modal = document.getElementById('myModal');
 const backgroundColorInput = document.getElementById('backgroundColorInput');
 const lineColorSwatch = document.getElementById('lineColorSwatch');
 const backgroundColorSwatch = document.getElementById('backgroundColorSwatch');
-
 let center = {x:540, y:540};
 let lineLength = 10;
 let currentPosition = center;
@@ -189,7 +162,6 @@ let branchAngle = 90;
 let branchColours = ["#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612","#000", "#ff0000", "#00ff00", "#0000ff", "#34aa12", "#123456", "#345612"];
 let designMin = {};
 let designMax = {};
-
 const app = {
   penDown: true,
   branchList: [],
@@ -567,11 +539,14 @@ function changeLineWidth(width){
   changeFromMenu(true);
 }
 
-
 function changeZoomRange(zoom){
+  const originalWidth = 1080;
   zoomText.textContent = `Zoom ${zoom}%`;
-  const newSize = Math.floor((100/zoom)*1080);
-  container.setAttribute("viewBox", "0 0 " + newSize + " " + newSize);
+  const newSize = Math.floor((100/zoom)*originalWidth);
+  const position = (originalWidth*0.5) - (newSize*0.5); //scale from center;
+  designSvg.setAttribute("viewBox", `${position} ${position} ${newSize} ${newSize}`);  
+  background.setAttribute('x', position);
+  background.setAttribute('y', position);
 }
 
 function rotateAroundPoint(centerOfRotation, degrees, length){
@@ -591,19 +566,23 @@ function createCircle(id, pos, r, stroke, fill, strokeWidth){
 }
 
 function createPath(posList, fill, stroke, strokeWidth, adjx, adjy){
-    fill += '20';
+    //fill += '20';
     let path = document.createElementNS(svgns, 'path');
     let d = "M" + (posList[0].x + adjx) + " " + (posList[0].y + adjy);
-    //d += "A 1300 1300 0 0 1 "+ posList[1].x + " " + posList[1].y;
-
     for(let i=1; i<posList.length; i++) {
             let pos = posList[i]
             let com = (pos.command=="M")? " M":" L";
       d += com + (pos.x + adjx) + " " + (pos.y + adjy);
     }
-        path.setAttributeNS(null, 'd', d);
-    path.setAttributeNS(null, 'style', 'fill:' + fill + '; stroke:' + stroke + ';  opacity:1; stroke-width:' + strokeWidth + ';');
-        layer1.appendChild(path);
+    path.setAttributeNS(null, 'd', d);
+    path.setAttributeNS(null, 'fill-opacity', 0.3);
+    path.setAttributeNS(null, 'stroke-opacity', 1);
+    path.setAttributeNS(null, 'fill', fill);
+    path.setAttributeNS(null, 'stroke', stroke);
+    path.setAttributeNS(null, 'stroke-width', strokeWidth);
+    
+    //path.setAttributeNS(null, 'style', 'fill:' + fill + '; stroke:' + stroke + '; stroke-width:' + strokeWidth + ';');
+    layer1.appendChild(path);
 }
 
 function lSystem(title, axiomStr, axiomLetters, ruleSets, turningAngle, convertList, startAngle, branching){
@@ -628,9 +607,9 @@ function changelSystem(title){
   }
 }
 
-function populateLSysMenu(){
+function populateLSystemSelect(){
   for(let i=0; i<lSystemData.length; i++){
-    lsysMenu.innerHTML += '<option value="' + lSystemData[i].title + '">' + lSystemData[i].title + '</otion>';
+     lSystemSelect.innerHTML += '<option value="' + lSystemData[i].title + '">' + lSystemData[i].title + '</otion>';
   }
 }
 
@@ -640,7 +619,7 @@ function changeFromMenu(update){
     currentPosition = {x:540, y:540};
     nextPosition = currentPosition;
     posList = [currentPosition];
-    changelSystem(lsysMenu.value);
+    changelSystem(lSystemSelect.value);
     create();
   }
 }
@@ -694,63 +673,62 @@ function Branch(pos, angle){
 }
 
 function getPosition(str){
-    currentPosition = nextPosition;
-    //convert X,Y to F
-    for(let i=0; i<currentLSystem.convertList.length; i++){
-        str = str.replace(currentLSystem.convertList[i], "F");
-    }
-    if(str.includes("[")){
-        app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
-        app.branchIndex++;
-        app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
-        startAngle = app.branchList[app.branchIndex].angle;
-        currentPosition = app.branchList[app.branchIndex].pos;
-    }else if (str.includes("]")){
-        //reset to previous index settings
-        app.branchIndex--;
-        startAngle = app.branchList[app.branchIndex].angle;
-        currentPosition = app.branchList[app.branchIndex].pos;
-        nextPosition = currentPosition;
+  currentPosition = nextPosition;
+  //convert X,Y to F
+  for(let i=0; i<currentLSystem.convertList.length; i++){
+      str = str.replace(currentLSystem.convertList[i], "F");
+  }
+  if(str.includes("[")){
+    app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
+    app.branchIndex++;
+    app.branchList[app.branchIndex] = new Branch(currentPosition, startAngle);
+    startAngle = app.branchList[app.branchIndex].angle;
+    currentPosition = app.branchList[app.branchIndex].pos;
+  }else if (str.includes("]")){
+    //reset to previous index settings
+    app.branchIndex--;
+    startAngle = app.branchList[app.branchIndex].angle;
+    currentPosition = app.branchList[app.branchIndex].pos;
+    nextPosition = currentPosition;
+  }else{
+  startAngle = getAngle(str, startAngle);
+    if(str.includes("F")){
+        lineLen = (currentLSystem.branching)? ((lineLength * Math.pow(scaleFactor, app.branchIndex))*20):lineLength
+        nextPosition = rotateAroundPoint(currentPosition, startAngle, lineLen);
+        nextPosition.command = "S";
+        if(currentLSystem.branching){
+            createPath([currentPosition,nextPosition], app.fillColor, branchColours[app.branchIndex], app.lineWidth, 0, 0);
+        }
     }else{
-    startAngle = getAngle(str, startAngle);
-        if(str.includes("F")){
-            lineLen = (currentLSystem.branching)? ((lineLength * Math.pow(scaleFactor, app.branchIndex))*20):lineLength
-            nextPosition = rotateAroundPoint(currentPosition, startAngle, lineLen);
-            nextPosition.command = "S";
-            if(currentLSystem.branching){
-                createPath([currentPosition,nextPosition], app.fillColor, branchColours[app.branchIndex], app.lineWidth, 0, 0);
-            }
-        }else{
-            nextPosition = currentPosition;
-            nextPosition.command = "S";
-            if(str.includes("U")){
-                app.penDown = false;
-            }else if(str.includes("D")){
-                app.penDown = true;
-                nextPosition.command = "M";
-            }
-            //console.log(nextPosition)
+        nextPosition = currentPosition;
+        nextPosition.command = "S";
+        if(str.includes("U")){
+            app.penDown = false;
+        }else if(str.includes("D")){
+            app.penDown = true;
+            nextPosition.command = "M";
         }
     }
+  }
 }
 
 function resetMinMax(){
-    designMin = {x:1000, y:1000}
-    designMax = {x:0, y:0}
+  designMin = {x:1000, y:1000}
+  designMax = {x:0, y:0}
 }
 
 function minMaxer(pos){
-    if(pos.x<designMin.x){designMin.x = pos.x;}
-    if(pos.y<designMin.y){designMin.y= pos.y;}
-    if(pos.x>designMax.x){designMax.x = pos.x;}
-    if(pos.y>designMax.y){designMax.y = pos.y;}
+  if(pos.x<designMin.x){designMin.x = pos.x;}
+  if(pos.y<designMin.y){designMin.y= pos.y;}
+  if(pos.x>designMax.x){designMax.x = pos.x;}
+  if(pos.y>designMax.y){designMax.y = pos.y;}
 }
 
 function transformPoint(pos){
-    let pt = designSvg.createSVGPoint();
-    pt.x = pos.x;
-    pt.y = pos.y;
-    return pt.matrixTransform(designSvg.getScreenCTM().inverse());
+  let pt = designSvg.createSVGPoint();
+  pt.x = pos.x;
+  pt.y = pos.y;
+  return pt.matrixTransform(designSvg.getScreenCTM().inverse());
 }
 
 function drawFromList(iterationList){
@@ -764,7 +742,6 @@ function drawFromList(iterationList){
           minMaxer(nextPosition)
           posList.push(nextPosition);
       }
-
   }
 
   let adjustx =  designMin.x + ((designMax.x - designMin.x) * 0.5);
@@ -772,11 +749,12 @@ function drawFromList(iterationList){
   let adjx = center.x - adjustx;
   let adjy = center.y - adjusty;
 
-  if(app.outlineInnerDistance!=0){
-    outline = outlinePoints(posList, false, app.outlineInnerDistance, true);
+  if(app.outlineOuterDistance!=0){
+    outline = outlinePoints(posList, true, app.outlineOuterDistance, true)
     createPath(outline, app.fillColor, app.lineColor, app.lineWidth, adjx, adjy);
   }
-  
+
+
   //createCircle("x", {x:adjustx, y:adjusty}, 4, "#00ff00", "#00ff00", 0)
   if(!currentLSystem.branching){
     document.getElementById("background").setAttribute("fill", app.backgroundColor);
@@ -788,12 +766,12 @@ function drawFromList(iterationList){
         createPath(posList, app.fillColor, app.lineColor, app.lineWidth, adjx, adjy);
     }
   }
-  
-  
-  if(app.outlineOuterDistance!=0){
-    outline = outlinePoints(posList, true, app.outlineOuterDistance, true)
+
+  if(app.outlineInnerDistance!=0){
+    outline = outlinePoints(posList, false, app.outlineInnerDistance, true);
     createPath(outline, app.fillColor, app.lineColor, app.lineWidth, adjx, adjy);
   }
+  
 }
 
 function create(){
@@ -823,18 +801,18 @@ function changeLineLength(val, update){
 }
 
 function changeTurnAngle(val, update){
-    val = clamp(0, 360, val ,turnAngle);
-    turnAngle += val;
-    document.getElementById("turnAngleText").innerHTML = turnAngle;
-    changeFromMenu(update);
+  val = clamp(0, 360, val ,turnAngle);
+  turnAngle += val;
+  document.getElementById("turnAngleText").innerHTML = turnAngle;
+  changeFromMenu(update);
 }
 
 function getIndex(num, total){
-    let index = num % total
-    if(index<0){
-       index = total + num;
-    }
-    return index;
+  let index = num % total
+  if(index<0){
+     index = total + num;
+  }
+  return index;
 }
 
 function lineAngle(pos1, pos2, positiveOnly){
@@ -843,11 +821,9 @@ function lineAngle(pos1, pos2, positiveOnly){
   let rad = Math.atan2(deltaY, deltaX); // In radians
   let deg = rad * (180 / Math.PI); // In degrees
   if(positiveOnly){
-        if(deg<0){
-            deg+=360}
-        ;
-    }
-    return Number(deg.toFixed(5));
+    if(deg<0) deg+=360;
+  }
+  return Number(deg.toFixed(5));
 }
 
 //improved line intersect - includes is the intersection along the segments
@@ -878,68 +854,62 @@ function lineIntersect(pos1, pos2, pos3, pos4, alongSegment){
 }
 
 function outlinePoints(pointListSrc, outside, width, closed){
-    const pointList = Object.create(pointListSrc);
-    //remove last as the same as first
-    if(closed) pointList.pop();
+  const pointList = Object.create(pointListSrc);
+  //remove last as the same as first
+  if(closed) pointList.pop();
 
-    //console.log(closed)
-    const angleAddition = (outside)? 90:-90;
-    const loopAddition = (closed)? 1:-1;
-    const pointListNew = [];
-    const pointListLen = pointList.length;
+  //console.log(closed)
+  const angleAddition = (outside)? 90:-90;
+  const loopAddition = (closed)? 1:-1;
+  const pointListNew = [];
+  const pointListLen = pointList.length;
 
-    for(let i=0; i<(pointListLen+loopAddition); i++){
+  for(let i=0; i<(pointListLen+loopAddition); i++){
     //for(let i=0; i<pointListLen; i++){
-        let firstPoint = pointList[getIndex(i, pointListLen)];
-        let secondPoint = pointList[getIndex(i+1, pointListLen)];
-        let thirdPoint = pointList[getIndex(i+1, pointListLen)];
-        let fourthPoint = pointList[getIndex(i+2, pointListLen)];
+    let firstPoint = pointList[getIndex(i, pointListLen)];
+    let secondPoint = pointList[getIndex(i+1, pointListLen)];
+    let thirdPoint = pointList[getIndex(i+1, pointListLen)];
+    let fourthPoint = pointList[getIndex(i+2, pointListLen)];
 
-        if(firstPoint==undefined || secondPoint==undefined || thirdPoint==undefined || fourthPoint==undefined) return false;
+    if(firstPoint==undefined || secondPoint==undefined || thirdPoint==undefined || fourthPoint==undefined) return false;
 
-        let angle1 = lineAngle(firstPoint, secondPoint, true);
-        let angle2 = lineAngle(thirdPoint, fourthPoint, true);
+    let angle1 = lineAngle(firstPoint, secondPoint, true);
+    let angle2 = lineAngle(thirdPoint, fourthPoint, true);
 
-        let rotationPoint1 = rotateAroundPoint(firstPoint, angle1+angleAddition, width);
-        let rotationPoint2 = rotateAroundPoint(secondPoint, angle1+angleAddition, width);
-        let rotationPoint3 = rotateAroundPoint(thirdPoint, angle2+angleAddition, width);
-        let rotationPoint4 = rotateAroundPoint(fourthPoint, angle2+angleAddition, width);
+    let rotationPoint1 = rotateAroundPoint(firstPoint, angle1+angleAddition, width);
+    let rotationPoint2 = rotateAroundPoint(secondPoint, angle1+angleAddition, width);
+    let rotationPoint3 = rotateAroundPoint(thirdPoint, angle2+angleAddition, width);
+    let rotationPoint4 = rotateAroundPoint(fourthPoint, angle2+angleAddition, width);
 
-        let intersectPoint = lineIntersect(rotationPoint1, rotationPoint2, rotationPoint3, rotationPoint4, false);
+    let intersectPoint = lineIntersect(rotationPoint1, rotationPoint2, rotationPoint3, rotationPoint4, false);
 
-        //draw first point if open !closed
-        if(i==0 & !closed){
-            console.log("is false")
-            pointListNew.push(rotationPoint1);
-            //createCircle("x", rotationPoint1, 1, "#000", "#ff00ff", 0, layer1);
-        }
-        let drawLast = (i==pointListLen-2 & !closed)? true:false;
-
-        //Draw internal points
-        if(intersectPoint!=false & !drawLast){
-            pointListNew.push(intersectPoint);
-        }
-
-        //draw last point if open
-        if(drawLast){
-            let angle3 = lineAngle(pointList[pointListLen-2],pointList[pointListLen-1], true);
-            let rotationPoint5 = rotateAroundPoint(pointList[pointListLen-1], angle3+angleAddition, width);
-            //createCircle("x", rotationPoint5, 1, "#123456", "none", 0, layer1);
-            pointListNew.push(rotationPoint5);
-        }
+    //draw first point if open !closed
+    if(i==0 & !closed){
+        console.log("is false")
+        pointListNew.push(rotationPoint1);
+        //createCircle("x", rotationPoint1, 1, "#000", "#ff00ff", 0, layer1);
     }
-    return pointListNew;
+    let drawLast = (i==pointListLen-2 & !closed)? true:false;
+    //Draw internal points
+    if(intersectPoint!=false & !drawLast){
+        pointListNew.push(intersectPoint);
+    }
+    //draw last point if open
+    if(drawLast){
+        let angle3 = lineAngle(pointList[pointListLen-2],pointList[pointListLen-1], true);
+        let rotationPoint5 = rotateAroundPoint(pointList[pointListLen-1], angle3+angleAddition, width);
+        pointListNew.push(rotationPoint5);
+    }
+  }
+  return pointListNew;
 }
 
-//save image
+// --- Save Image ---
 function triggerDownload(imgURI) {
   const a = document.createElement('a');
-  a.download = 'l-system-fractal.png'; // filename
+  a.download = currentLSystem.title.toLowerCase().replace(/ /g, '_') +  '.png'; // filename
   a.target = '_blank';
   a.href = imgURI;
-  // trigger download button
-  // (set bubbles to false here.
-  // or just a.click() if you dont care about bubbling)
   a.dispatchEvent(new MouseEvent('click', {
     view: window,
     bubbles: false,
@@ -948,7 +918,10 @@ function triggerDownload(imgURI) {
 }
 
 function savePng(){
-  const svgNode = container;
+  canvas.classList.remove('hidden');
+  designSvg.setAttribute('width', '1080px');
+  designSvg.setAttribute('height', '1080px');
+  const svgNode = designSvg;
   const svgString = (new XMLSerializer()).serializeToString(svgNode);
   const svgBlob = new Blob([svgString], {
     type: 'image/svg+xml;charset=utf-8'
@@ -962,10 +935,8 @@ function savePng(){
   image.height = svgNode.height.baseVal.value;
   image.src = url;
   image.onload = function () {
-    const canvas = document.getElementById('svgCanvas');
     canvas.width = image.width;
     canvas.height = image.height;
-
     const ctx = canvas.getContext('2d');
     ctx.drawImage(image, 0, 0);
     DOMURL.revokeObjectURL(url);
@@ -974,39 +945,43 @@ function savePng(){
       .toDataURL('image/png')
       .replace('image/png', 'image/octet-stream');
       triggerDownload(imgURI);
+      designSvg.setAttribute('width', '100%');
+      designSvg.setAttribute('height', '100%');
+      canvas.classList.add('hidden');
   };
   closeModal();
+
 }
 
 function triggerDownloadSvg(imgURI, fileName){
-    let a = document.createElement('a')
-    a.setAttribute('download', 'l-system-fractal.svg')
-    a.setAttribute('href', imgURI)
-    a.setAttribute('target', '_blank')
-    a.click()
+  const a = document.createElement('a');
+  a.setAttribute('download', currentLSystem.title.toLowerCase().replace(/ /g, '_') + '.svg');
+  a.setAttribute('href', imgURI);
+  a.setAttribute('target', '_blank');
+  a.click();
 }
 
 function saveSvg(){
-    let data = (new XMLSerializer()).serializeToString(container)
-    let svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'})
-    let url = URL.createObjectURL(svgBlob)
-    triggerDownloadSvg(url);
-    closeModal();
+  let data = (new XMLSerializer()).serializeToString(designSvg)
+  let svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'})
+  let url = URL.createObjectURL(svgBlob)
+  triggerDownloadSvg(url);
+  closeModal();
 }
 
 function joinPathsInLayer(layer){
-    let pathString = "";
-    const paths = layer.getElementsByTagName("path");
-    for(let i=0; i<paths.length; i++){
-        pathString += paths[i].getAttribute("d") + " "
-    }
-    console.log(paths.length)
-    return pathString.trim();
+  let pathString = "";
+  const paths = layer.getElementsByTagName("path");
+  for(let i=0; i<paths.length; i++){
+      pathString += paths[i].getAttribute("d") + " "
+  }
+  console.log(paths.length)
+  return pathString.trim();
 }
 
 function copySvgToClipboard(layer){
-    const svgStr = joinPathsInLayer(layer);
-    navigator.clipboard.writeText(svgStr);
+  const svgStr = joinPathsInLayer(layer);
+  navigator.clipboard.writeText(svgStr);
 }
 
 // -- Modal ---
@@ -1023,7 +998,7 @@ function closeModal() {
 }
 
 function init(){
-  populateLSysMenu();
+  populateLSystemSelect();
   changeTurnAngle(0, false);
   changeIterations(0, false);
   changeLineLength(0, false)
@@ -1032,5 +1007,8 @@ function init(){
 
 init();
 
+//Note rgba alpha does not import into InkScape
+
 </script>
+</body>
 </html>
